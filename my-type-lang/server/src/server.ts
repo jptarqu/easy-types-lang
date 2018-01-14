@@ -1,3 +1,4 @@
+import { TypeParser } from './parser';
 /* --------------------------------------------------------------------------------------------
  * Copyright (c) Microsoft Corporation. All rights reserved.
  * Licensed under the MIT License. See License.txt in the project root for license information.
@@ -12,6 +13,7 @@ import {
 import { setupEnv } from './primitivesProvider';
 
 const typeEngine = setupEnv()
+const easyTypesParser = new TypeParser()
 // Create a connection for the server. The connection uses Node's IPC as a transport
 let connection: IConnection = createConnection(new IPCMessageReader(process), new IPCMessageWriter(process));
 
@@ -42,7 +44,9 @@ connection.onInitialize((params): InitializeResult => {
 // The content of a text document has changed. This event is emitted
 // when the text document first opened or when its content has changed.
 documents.onDidChangeContent((change) => {
-	validateTextDocument(change.document);
+	let lines = change.document.getText().split(/\r?\n/g);
+	easyTypesParser.parse(lines)
+	// validateTextDocument(change.document);
 });
 
 // The settings interface describe the server relevant settings part
@@ -102,9 +106,15 @@ connection.onCompletion((_textDocumentPosition: TextDocumentPositionParams): Com
 	// The pass parameter contains the position of the text document in 
 	// which code complete got requested. For the example we ignore this
 	// info and always provide the same completion items.
-	const suggestions = typeEngine.getCompletionSuggestions()
 	// TODO get only completions when the carret position is after the name of the prop
-	return suggestions
+	const carretPos = _textDocumentPosition.position
+	if (easyTypesParser.isPosATypeForProp(carretPos.character, carretPos.line)) {
+		const suggestions = typeEngine.getCompletionSuggestions()
+		return suggestions
+
+	} else {
+		return []
+	}
 });
 
 // This handler resolve additional information for the item selected in

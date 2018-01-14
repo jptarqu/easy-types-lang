@@ -1,0 +1,5 @@
+type Hello
+    jolo money
+    huhh integer
+    njhhj string
+    hh string
