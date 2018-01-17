@@ -1,6 +1,5 @@
 import {
-    IPCMessageReader, IPCMessageWriter, createConnection, IConnection, TextDocuments, TextDocument,
-    Diagnostic, DiagnosticSeverity, InitializeResult, TextDocumentPositionParams, CompletionItem,
+    CompletionItem,
     CompletionItemKind
 } from 'vscode-languageserver';
 

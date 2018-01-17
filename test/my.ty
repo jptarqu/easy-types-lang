@@ -1,5 +1,5 @@
 type Hello
-    jolo money
+    jolo string
     huhh integer
     njhhj string
     hh string

@@ -8,9 +8,14 @@ import { TypeParser } from './parser';
 import {
 	IPCMessageReader, IPCMessageWriter, createConnection, IConnection, TextDocuments, TextDocument,
 	Diagnostic, DiagnosticSeverity, InitializeResult, TextDocumentPositionParams, CompletionItem,
-	CompletionItemKind
+
 } from 'vscode-languageserver';
 import { setupEnv } from './primitivesProvider';
+
+import Uri from 'vscode-uri'
+
+import * as path from 'path';
+import * as fs from 'fs'
 
 const typeEngine = setupEnv()
 const easyTypesParser = new TypeParser()
@@ -26,9 +31,10 @@ documents.listen(connection);
 
 // After the server has started the client sends an initialize request. The server receives
 // in the passed params the rootPath of the workspace plus the client capabilities. 
-let workspaceRoot: string;
-connection.onInitialize((params): InitializeResult => {
-	workspaceRoot = params.rootPath;
+
+connection.onInitialize((_): InitializeResult => {
+
+
 	return {
 		capabilities: {
 			// Tell the client that the server works in FULL text document sync mode
@@ -71,9 +77,12 @@ connection.onDidChangeConfiguration((change) => {
 	documents.all().forEach(validateTextDocument);
 });
 
+function splitIntoLines(data: string) {
+	return data.split(/\r?\n/g)
+}
 function validateTextDocument(textDocument: TextDocument): void {
 	let diagnostics: Diagnostic[] = [];
-	let lines = textDocument.getText().split(/\r?\n/g);
+	let lines = splitIntoLines(textDocument.getText());
 	let problems = 0;
 	for (var i = 0; i < lines.length && problems < maxNumberOfProblems; i++) {
 		let line = lines[i];
@@ -97,7 +106,15 @@ function validateTextDocument(textDocument: TextDocument): void {
 
 connection.onDidChangeWatchedFiles((_change) => {
 	// Monitored files have change in VSCode
-	connection.console.log('We received an file change event');
+	_change.changes.forEach(chg => {
+		connection.console.log('We received an file change event ' + chg.uri);
+		let fspath = Uri.parse(chg.uri).fsPath;
+		const ext = path.extname(fspath)
+		if (ext === '.tconf') {
+			const confLines = splitIntoLines(fs.readFileSync(fspath).toString())
+			easyTypesParser.parseConfiguration(confLines)
+		}
+	});
 });
 
 

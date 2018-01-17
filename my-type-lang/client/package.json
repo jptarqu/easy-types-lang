@@ -16,7 +16,7 @@
 		"Other"
 	],
 	"activationEvents": [
-		"onLanguage:plaintext"
+		"onLanguage:easytypes"
 	],
 	"main": "./out/src/extension",
 	"contributes": {
@@ -42,7 +42,20 @@
 					"description": "Traces the communication between VSCode and the language server."
 				}
 			}
-		}
+		},
+		"languages": [
+			{
+				"id": "easytypes",
+				"aliases": [
+					"easytypes"
+				],
+				"extensions": [
+					".ty",
+					".pr"
+				],
+				"configuration": "./easytypes-configuration.json"
+			}
+		]
 	},
 	"scripts": {
 		"vscode:prepublish": "tsc -p ./",

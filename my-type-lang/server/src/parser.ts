@@ -1,3 +1,4 @@
+
 export interface Prop {
     readonly name: string,
     readonly propTypeName: string,
@@ -134,8 +135,23 @@ function parseLines(lines: string[]): ParseFileInfo {
     }
 }
 
+export class ProjectSourcesManager {
+    private typeFiles: string[] = []
+    constructor() {
+
+    }
+    addFile(section: string, file: string) {
+        if (section.toUpperCase() === 'TYPE') {
+            this.typeFiles.push(file)
+        }
+    }
+    getTypeFiles() {
+        return this.typeFiles
+    }
+}
 export class TypeParser {
     private currParseFileInfo: ParseFileInfo
+    private sourcesManager: ProjectSourcesManager
     parse(lines: string[]) {
         this.currParseFileInfo = parseLines(lines)
     }
@@ -145,5 +161,20 @@ export class TypeParser {
             return false
         }
         return (syntaxLine.nameElement.position.endPos + 1) < charNum
+    }
+    parseConfiguration(lines: string[]) {
+        if (this.sourcesManager) {
+            delete this.sourcesManager
+        }
+        this.sourcesManager = new ProjectSourcesManager()
+        let lastSection = ''
+        for (let lineIdx = 0; lineIdx < lines.length; lineIdx++) {
+            const line = lines[lineIdx]
+            if (line.startsWith('#')) {
+                lastSection = line.substring(1)
+            } else {
+                this.sourcesManager.addFile(lastSection, line)
+            }
+        }
     }
 }
