@@ -51,6 +51,8 @@ connection.onInitialize((_): InitializeResult => {
 // when the text document first opened or when its content has changed.
 documents.onDidChangeContent((change) => {
 	let lines = change.document.getText().split(/\r?\n/g);
+	let fspath = Uri.parse(change.document.uri).fsPath;
+	const ext = path.extname(fspath)
 	easyTypesParser.parse(lines)
 	// validateTextDocument(change.document);
 });
@@ -123,14 +125,18 @@ connection.onCompletion((_textDocumentPosition: TextDocumentPositionParams): Com
 	// The pass parameter contains the position of the text document in 
 	// which code complete got requested. For the example we ignore this
 	// info and always provide the same completion items.
-	// TODO get only completions when the carret position is after the name of the prop
-	const carretPos = _textDocumentPosition.position
-	if (easyTypesParser.isPosATypeForProp(carretPos.character, carretPos.line)) {
-		const suggestions = typeEngine.getCompletionSuggestions()
-		return suggestions
 
-	} else {
-		return []
+	const carretPos = _textDocumentPosition.position
+	let fspath = Uri.parse(_textDocumentPosition.textDocument.uri).fsPath;
+	const ext = path.extname(fspath)
+	if (ext === '.ty') {
+		if (easyTypesParser.isPosATypeForProp(carretPos.character, carretPos.line)) {
+			const suggestions = typeEngine.getCompletionSuggestions()
+			return suggestions
+
+		} else {
+			return []
+		}
 	}
 });
 
