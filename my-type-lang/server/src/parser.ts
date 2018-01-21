@@ -1,3 +1,5 @@
+import { PositionInfo, getIndexAfterToken } from './common';
+import { ParsePrimtivesFileInfo, parsePrimtivesLines } from './primitiveFileParser';
 
 export interface Prop {
     readonly name: string,
@@ -8,10 +10,6 @@ export interface CustomType {
     readonly props: Prop[]
 }
 
-export interface PositionInfo {
-    readonly startPos: number,
-    readonly endPos: number,
-}
 
 export interface TypeNameElement {
     typeName: string,
@@ -51,16 +49,6 @@ function buildTypeNameLine(line: string, lineNum: number): TypeNameLine {
             position: { startPos, endPos }
         }
     }
-}
-function getIndexAfterToken(str: string, token: string) {
-    let idx = 0
-    for (var char of str) {
-        if (char !== token) {
-            return idx
-        }
-        idx++
-    }
-    return idx
 }
 function buildPropLine(line: string, lineNum: number, linesParsed: SyntaxLineType[]): void {
     if (line.length > 0) {
@@ -152,8 +140,12 @@ export class ProjectSourcesManager {
 export class TypeParser {
     private currParseFileInfo: ParseFileInfo
     private sourcesManager: ProjectSourcesManager
+    private currPrimtivesFileInfo: ParsePrimtivesFileInfo
     parse(lines: string[]) {
         this.currParseFileInfo = parseLines(lines)
+    }
+    parsePrimtives(lines: string[]) {
+        this.currPrimtivesFileInfo = parsePrimtivesLines(lines)
     }
     isPosATypeForProp(charNum: number, lineNumber: number) {
         const syntaxLine = this.currParseFileInfo.linesParsed[lineNumber]
@@ -161,6 +153,16 @@ export class TypeParser {
             return false
         }
         return (syntaxLine.nameElement.position.endPos + 1) < charNum
+    }
+    isPosABaseTypeForPrimtive(charNum: number, lineNumber: number) {
+        const syntaxLine = this.currPrimtivesFileInfo.linesParsed[lineNumber]
+        if (!syntaxLine) {
+            return false
+        }
+        return ((syntaxLine.nameElement.position.endPos + 1) < charNum) &&
+            (syntaxLine.baseArguments.length === 0 ||
+                ((syntaxLine.baseArguments[0].position.startPos) > charNum)
+            )
     }
     parseConfiguration(lines: string[]) {
         if (this.sourcesManager) {
