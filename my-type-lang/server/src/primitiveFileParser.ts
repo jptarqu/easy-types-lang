@@ -121,7 +121,7 @@ export function parsePrimtivesLines(lines: string[]): ParsePrimtivesFileInfo {
 
     const linesParsed: PrimitiveSyntaxLineType[] = []
     const customPrimitives: CustomPrimitive[] = []
-    for (let lineIdx = 0; lineIdx < lines.length; lineIdx++) {
+    for (let lineIdx = 1; lineIdx < lines.length; lineIdx++) {
         const line = lines[lineIdx];
         if (line.length > 0 && !line.startsWith(' ')) {
             buildPropLine(line, lineIdx + 1, linesParsed)

@@ -7,7 +7,7 @@ import { TypeParser } from './parser';
 
 import {
 	IPCMessageReader, IPCMessageWriter, createConnection, IConnection, TextDocuments, TextDocument,
-	Diagnostic, DiagnosticSeverity, InitializeResult, TextDocumentPositionParams, CompletionItem,
+	InitializeResult, TextDocumentPositionParams, CompletionItem,
 
 } from 'vscode-languageserver';
 import { setupEnv } from './primitivesProvider';
@@ -50,31 +50,38 @@ connection.onInitialize((_): InitializeResult => {
 // The content of a text document has changed. This event is emitted
 // when the text document first opened or when its content has changed.
 documents.onDidChangeContent((change) => {
-	let lines = change.document.getText().split(/\r?\n/g);
 	let fspath = Uri.parse(change.document.uri).fsPath;
 	const ext = path.extname(fspath)
-	easyTypesParser.parse(lines)
+	let lines: string[]
+	lines = change.document.getText().split(/\r?\n/g)
+	switch (ext) {
+		case '.ty':
+			easyTypesParser.parse(fspath, lines)
+			break
+
+	}
+
+
 	// validateTextDocument(change.document);
 });
 
 // The settings interface describe the server relevant settings part
-interface Settings {
-	lspSample: ExampleSettings;
-}
+// interface Settings {
+// 	lspSample: ExampleSettings;
+// }
 
 // These are the example settings we defined in the client's package.json
-// file
-interface ExampleSettings {
-	maxNumberOfProblems: number;
-}
+// // file
+// interface ExampleSettings {
+// 	maxNumberOfProblems: number;
+// }
 
-// hold the maxNumberOfProblems setting
-let maxNumberOfProblems: number;
+
 // The settings have changed. Is send on server activation
 // as well.
-connection.onDidChangeConfiguration((change) => {
-	let settings = <Settings>change.settings;
-	maxNumberOfProblems = settings.lspSample.maxNumberOfProblems || 100;
+connection.onDidChangeConfiguration((_) => {
+	// let settings = <Settings>change.settings;
+	// maxNumberOfProblems = settings.lspSample.maxNumberOfProblems || 100;
 	// Revalidate any open text documents
 	documents.all().forEach(validateTextDocument);
 });
@@ -82,28 +89,7 @@ connection.onDidChangeConfiguration((change) => {
 function splitIntoLines(data: string) {
 	return data.split(/\r?\n/g)
 }
-function validateTextDocument(textDocument: TextDocument): void {
-	let diagnostics: Diagnostic[] = [];
-	let lines = splitIntoLines(textDocument.getText());
-	let problems = 0;
-	for (var i = 0; i < lines.length && problems < maxNumberOfProblems; i++) {
-		let line = lines[i];
-		let index = line.indexOf('typescript');
-		if (index >= 0) {
-			problems++;
-			diagnostics.push({
-				severity: DiagnosticSeverity.Warning,
-				range: {
-					start: { line: i, character: index },
-					end: { line: i, character: index + 10 }
-				},
-				message: `${line.substr(index, 10)} should be spelled TypeScript`,
-				source: 'ex'
-			});
-		}
-	}
-	// Send the computed diagnostics to VSCode.
-	connection.sendDiagnostics({ uri: textDocument.uri, diagnostics });
+function validateTextDocument(_: TextDocument): void {
 }
 
 connection.onDidChangeWatchedFiles((_change) => {
@@ -112,9 +98,14 @@ connection.onDidChangeWatchedFiles((_change) => {
 		connection.console.log('We received an file change event ' + chg.uri);
 		let fspath = Uri.parse(chg.uri).fsPath;
 		const ext = path.extname(fspath)
-		if (ext === '.tconf') {
-			const confLines = splitIntoLines(fs.readFileSync(fspath).toString())
-			easyTypesParser.parseConfiguration(confLines)
+		switch (ext) {
+			case '.tconf':
+				const confLines = splitIntoLines(fs.readFileSync(fspath).toString())
+				easyTypesParser.parseConfiguration(confLines)
+				break
+			// case '.ty':
+
+
 		}
 	});
 });
@@ -122,22 +113,21 @@ connection.onDidChangeWatchedFiles((_change) => {
 
 // This handler provides the initial list of the completion items.
 connection.onCompletion((_textDocumentPosition: TextDocumentPositionParams): CompletionItem[] => {
-	// The pass parameter contains the position of the text document in 
-	// which code complete got requested. For the example we ignore this
-	// info and always provide the same completion items.
 
 	const carretPos = _textDocumentPosition.position
 	let fspath = Uri.parse(_textDocumentPosition.textDocument.uri).fsPath;
 	const ext = path.extname(fspath)
-	if (ext === '.ty') {
-		if (easyTypesParser.isPosATypeForProp(carretPos.character, carretPos.line)) {
-			const suggestions = typeEngine.getCompletionSuggestions()
-			return suggestions
-
-		} else {
+	switch (ext) {
+		case '.ty':
+			if (easyTypesParser.getSuggestions(fspath, carretPos.character, carretPos.line + 1)) {
+				const suggestions = typeEngine.getCompletionSuggestions()
+				return suggestions
+			}
 			return []
-		}
+		default:
+			return []
 	}
+
 });
 
 // This handler resolve additional information for the item selected in

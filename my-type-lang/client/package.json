@@ -50,8 +50,7 @@
 					"easytypes"
 				],
 				"extensions": [
-					".ty",
-					".pr"
+					".ty"
 				],
 				"configuration": "./easytypes-configuration.json"
 			}

@@ -91,7 +91,7 @@ export interface ParseFileInfo {
 function parseLines(lines: string[]): ParseFileInfo {
     const linesParsed: SyntaxLineType[] = []
     const customTypes: CustomType[] = []
-    for (let lineIdx = 0; lineIdx < lines.length; lineIdx++) {
+    for (let lineIdx = 1; lineIdx < lines.length; lineIdx++) {
         const line = lines[lineIdx];
         if (line.startsWith(typeKeyword)) {
             linesParsed.push(buildTypeNameLine(line, lineIdx + 1))
@@ -137,32 +137,74 @@ export class ProjectSourcesManager {
         return this.typeFiles
     }
 }
+export const primitivesHeader = 'primitives'
+export const typesHeader = 'types'
+
+export interface ParseFileInfoHash {
+    [docName: string]: ParseFileInfo
+}
+export interface ParsePrimitivesFileInfoHash {
+    [docName: string]: ParsePrimtivesFileInfo
+}
 export class TypeParser {
-    private currParseFileInfo: ParseFileInfo
+    private currParseFilesInfo: ParseFileInfoHash = {}
     private sourcesManager: ProjectSourcesManager
-    private currPrimtivesFileInfo: ParsePrimtivesFileInfo
-    parse(lines: string[]) {
-        this.currParseFileInfo = parseLines(lines)
-    }
-    parsePrimtives(lines: string[]) {
-        this.currPrimtivesFileInfo = parsePrimtivesLines(lines)
-    }
-    isPosATypeForProp(charNum: number, lineNumber: number) {
-        const syntaxLine = this.currParseFileInfo.linesParsed[lineNumber]
-        if (!syntaxLine) {
-            return false
+    private currPrimtivesFilesInfo: ParsePrimitivesFileInfoHash = {}
+    parse(fileName: string, lines: string[]) {
+        const firstLine = lines[0]
+        if (firstLine) {
+            switch (firstLine) {
+                case primitivesHeader:
+                    this.parsePrimtives(fileName, lines)
+                    break
+                case typesHeader:
+                    this.parseTypes(fileName, lines)
+                    break
+                default:
+                    break
+            }
         }
-        return (syntaxLine.nameElement.position.endPos + 1) < charNum
     }
-    isPosABaseTypeForPrimtive(charNum: number, lineNumber: number) {
-        const syntaxLine = this.currPrimtivesFileInfo.linesParsed[lineNumber]
-        if (!syntaxLine) {
-            return false
+    parseTypes(fileName: string, lines: string[]) {
+        this.currParseFilesInfo[fileName] = parseLines(lines)
+    }
+    parsePrimtives(fileName: string, lines: string[]) {
+        this.currPrimtivesFilesInfo[fileName] = parsePrimtivesLines(lines)
+    }
+
+    getSuggestions(fileName: string, charNum: number, lineNumber: number) {
+        const fileTypes = this.currParseFilesInfo[fileName]
+        if (fileTypes) {
+            return this.isPosATypeForProp(fileTypes, charNum, lineNumber)
         }
-        return ((syntaxLine.nameElement.position.endPos + 1) < charNum) &&
-            (syntaxLine.baseArguments.length === 0 ||
-                ((syntaxLine.baseArguments[0].position.startPos) > charNum)
-            )
+        const fileProps = this.currPrimtivesFilesInfo[fileName]
+        if (fileProps) {
+            return this.isPosABaseTypeForPrimtive(fileProps, charNum, lineNumber)
+        }
+    }
+    private isPosATypeForProp(fileInfo: ParseFileInfo, charNum: number, lineNumber: number) {
+        if (fileInfo) {
+            const syntaxLine = fileInfo.linesParsed[lineNumber]
+            if (!syntaxLine) {
+                return false
+            }
+            return (syntaxLine.nameElement.position.endPos + 1) < charNum
+        }
+        return false
+    }
+    private isPosABaseTypeForPrimtive(fileInfo: ParsePrimtivesFileInfo, charNum: number, lineNumber: number) {
+        if (fileInfo) {
+
+            const syntaxLine = fileInfo.linesParsed[lineNumber]
+            if (!syntaxLine) {
+                return false
+            }
+            return ((syntaxLine.nameElement.position.endPos + 1) < charNum) &&
+                (syntaxLine.baseArguments.length === 0 ||
+                    ((syntaxLine.baseArguments[0].position.startPos) > charNum)
+                )
+        }
+        return false
     }
     parseConfiguration(lines: string[]) {
         if (this.sourcesManager) {
