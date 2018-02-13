@@ -62,8 +62,11 @@
     <Compile Include="PrimitivesParserTypes.fs" />
     <Compile Include="PrimitivesParser.fs" />
     <Compile Include="SemanticTypes.fs" />
-    <Compile Include="Program.fs" />
     <None Include="Samples\samplePrimitives.ty" />
+    <None Include="Samples\sampleTypes.ty" />
+    <Compile Include="CustomTypesParserTypes.fs" />
+    <Compile Include="CustomTypesParser.fs" />
+    <Compile Include="Program.fs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="mscorlib" />

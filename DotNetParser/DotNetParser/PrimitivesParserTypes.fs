@@ -22,6 +22,10 @@ module PrimitivesParserTypes =
         {Size: int; Precision: int;  MinValue: decimal; MaxValue: decimal;  }
     type CommonDataRequirementsDate =
         {  MinValue: System.DateTime; MaxValue: System.DateTime;  }
+    type CommonDataRequirementsDateTime =
+        {  MinValue: System.DateTime; MaxValue: System.DateTime;  }
+    type CommonDataRequirementsBinary =
+        {Size: int;   MinSize: int;  }
 
     type CommonDataRequirements =
         | CommonDataRequirementsString of CommonDataRequirementsString
@@ -29,6 +33,8 @@ module PrimitivesParserTypes =
         | CommonDataRequirementsInt of CommonDataRequirementsInt
         | CommonDataRequirementsDecimal of CommonDataRequirementsDecimal
         | CommonDataRequirementsDate of CommonDataRequirementsDate
+        | CommonDataRequirementsDateTime of CommonDataRequirementsDateTime
+        | CommonDataRequirementsBinary of CommonDataRequirementsBinary
 
     type PrimitiveNameElement = {
         name: string
@@ -64,7 +70,7 @@ module PrimitivesParserTypes =
     type CustomPrimitiveInfo = {
         name: string
         baseType: string
-        baseArgs: string seq
+        baseArgs: string array
     }
     type ParsePrimtivesFileInfo = {
         linesParsed: PrimitiveSyntaxLineType seq

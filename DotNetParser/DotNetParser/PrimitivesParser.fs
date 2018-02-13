@@ -68,7 +68,7 @@ module PrimitivesParser =
                 let currType = {
                             name = l.nameElement.name ;
                             baseType =  defaultArg (l.primitiveBaseTypeElement |> Option.map (fun o -> o.name)) "";
-                            baseArgs = l.baseArguments |> Seq.map (fun a -> a.value)
+                            baseArgs = l.baseArguments |> Seq.map (fun a -> a.value) |> Seq.toArray
                         }
                 customPrimitives.AddLast(currType) |> ignore
         )
