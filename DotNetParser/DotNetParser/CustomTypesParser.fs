@@ -56,7 +56,7 @@ module CustomTypesParser =
     let parseTypesLines(lines: LinkedList<string>): ParseTypesFileInfo = 
 
         let linesParsed: LinkedList<SyntaxLineType> = LinkedList<SyntaxLineType>()
-        let customTypes: LinkedList<CustomType> = LinkedList<CustomType>()
+        let customTypes: LinkedList<CustomTypeInfo> = LinkedList<CustomTypeInfo>()
         lines
         |> Seq.iteri (fun lineIdx (line: string) -> 
             if (line.Length > 0) then 
@@ -68,7 +68,7 @@ module CustomTypesParser =
             )
 
             
-        let mutable currType: CustomType option = None
+        let mutable currType: CustomTypeInfo option = None
         linesParsed
         |> Seq.iter (fun line -> 
             match line with

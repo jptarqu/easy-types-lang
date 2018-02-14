@@ -8,7 +8,7 @@ module CustomTypesParserTypes =
         name: string;
         propTypeName: string;
     }
-    type CustomType= {
+    type CustomTypeInfo = {
         name: string;
         props: LinkedList<Prop>
     }
@@ -42,5 +42,5 @@ module CustomTypesParserTypes =
     
     type ParseTypesFileInfo = {
         linesParsed: SyntaxLineType seq
-        customTypes: CustomType seq
+        customTypes: CustomTypeInfo seq
     }

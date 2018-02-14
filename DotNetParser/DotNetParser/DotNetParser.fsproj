@@ -61,11 +61,15 @@
     <Compile Include="Common.fs" />
     <Compile Include="PrimitivesParserTypes.fs" />
     <Compile Include="PrimitivesParser.fs" />
-    <Compile Include="SemanticTypes.fs" />
-    <None Include="Samples\samplePrimitives.ty" />
-    <None Include="Samples\sampleTypes.ty" />
+    <None Include="Samples\samplePrimitives.ty">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Samples\sampleTypes.ty">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <Compile Include="CustomTypesParserTypes.fs" />
     <Compile Include="CustomTypesParser.fs" />
+    <Compile Include="SemanticTypes.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
   <ItemGroup>

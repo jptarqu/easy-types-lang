@@ -2,10 +2,16 @@
 
 module SemanticTypes = 
     open PrimitivesParserTypes
+    open CustomTypesParserTypes
 
     type CustomPrimitive = {
         name: string
         baseType:  CommonDataRequirements
+    }
+    
+    type CustomType= {
+        name: string;
+        props: CustomPrimitive list
     }
 
     let parseNumParam (str:string) =
@@ -68,3 +74,15 @@ module SemanticTypes =
         | _ ->
             failwithf "Invalid Type %s" info.baseType
       
+    let mapTypeToSemantic (allPrimitveTypes: CustomPrimitive seq)  (info: CustomTypeInfo) : CustomType =
+        {
+            name = info.name;
+            props = info.props 
+                |> Seq.map 
+                    (fun p -> 
+                        allPrimitveTypes 
+                        |> Seq.find (fun cp -> cp.name = p.propTypeName) 
+                        
+                        ) 
+                |> Seq.toList
+        }
