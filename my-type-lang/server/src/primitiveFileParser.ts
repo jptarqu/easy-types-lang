@@ -56,6 +56,7 @@ function getNextWords(line: string, wordBoundary: string): WordInfo[] {
     let currWord: WordInfo = getNextWord(line, wordBoundary)
     while (currWord.word !== '') {
         words.push(currWord)
+        currWord = getNextWord(line, wordBoundary)
     }
     return words
 }

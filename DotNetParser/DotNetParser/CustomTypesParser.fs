@@ -53,7 +53,7 @@ module CustomTypesParser =
                     ) |> ignore
     
     let typeKeyword = "type"
-    let parseTypesLines(lines: LinkedList<string>): ParseTypesFileInfo = 
+    let parseTypesLines(lines: string seq): ParseTypesFileInfo = 
 
         let linesParsed: LinkedList<SyntaxLineType> = LinkedList<SyntaxLineType>()
         let customTypes: LinkedList<CustomTypeInfo> = LinkedList<CustomTypeInfo>()

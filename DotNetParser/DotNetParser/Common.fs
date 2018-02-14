@@ -40,8 +40,9 @@ module Common =
         
     let getNextWords(line: string, wordBoundary: char): WordInfo[] =
         let words = LinkedList<WordInfo>()
-        let currWord: WordInfo = getNextWord(line, wordBoundary)
+        let mutable currWord: WordInfo = getNextWord(line, wordBoundary)
         while (currWord.word <> "") do
             words.AddLast(currWord) |> ignore
+            currWord <- getNextWord(currWord.restOfLine, wordBoundary)
         words |> Seq.toArray
     

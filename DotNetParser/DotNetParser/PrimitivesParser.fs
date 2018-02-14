@@ -50,7 +50,7 @@ module PrimitivesParser =
             
 
         
-    let parsePrimtivesLines(lines: LinkedList<string>): ParsePrimtivesFileInfo = 
+    let parsePrimitivesLines(lines: string seq): ParsePrimtivesFileInfo = 
 
         let linesParsed: LinkedList<PrimitiveSyntaxLineType> = LinkedList<PrimitiveSyntaxLineType>()
         let customPrimitives: LinkedList<CustomPrimitiveInfo> = LinkedList<CustomPrimitiveInfo>()
