@@ -54,6 +54,13 @@
 				],
 				"configuration": "./easytypes-configuration.json"
 			}
+		],
+		"grammars": [
+				{
+					"language": "easytypes",
+					"scopeName": "source.easytypes",
+					"path": "./syntaxes/easyTypes.tmLanguage"
+				}
 		]
 	},
 	"scripts": {

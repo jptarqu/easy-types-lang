@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>fileTypes</key>
+	<array>
+		<string>ty</string>
+	</array>
+	<key>foldingStartMarker</key>
+	<string>(?i)^\s*(type)\b</string>
+	<key>foldingStopMarker</key>
+	<string>(?i)^\s*(end)\b</string>
+	<key>keyEquivalent</key>
+	<string>^~S</string>
+	<key>name</key>
+	<string>Easy Types</string>
+	<key>patterns</key>
+	<array>
+	
+		<dict>
+			<key>match</key>
+			<string>^(types|primitives)\b</string>
+			<key>name</key>
+			<string>keyword.header.easytypes</string>
+		</dict>
+		<dict>
+			<key>match</key>
+			<string>^type\b</string>
+			<key>name</key>
+			<string>keyword.header.easytypes</string>
+		</dict>
+		
+		<dict>
+			<key>match</key>
+			<string>^(\S+)\s+(String|Integer|Decimal|Money|Date|DateTime|Binary)\b</string>
+			<key>captures</key>
+			<dict>
+				<key>1</key>
+				<dict>
+					<key>name</key>
+					<string>entity.name</string>
+				</dict>
+				<key>2</key>
+				<dict>
+					<key>name</key>
+					<string>keyword.easytypes</string>
+				</dict>
+			</dict>
+			<key>name</key>
+			<string>meta.easytypes</string>
+		</dict>
+
+		<dict>
+			<key>match</key>
+			<string>^\s+(\S+)\s+(\S+)\s*$</string>
+			<key>captures</key>
+			<dict>
+				<key>1</key>
+				<dict>
+					<key>name</key>
+					<string>entity.name</string>
+				</dict>
+				<key>2</key>
+				<dict>
+					<key>name</key>
+					<string>keyword.easytypes</string>
+				</dict>
+			</dict>
+			<key>name</key>
+			<string>meta.easytypes</string>
+		</dict>
+	</array>
+	<key>scopeName</key>
+	<string>source.easytypes</string>
+	<key>uuid</key>
+	<string>01120ce8-b5a2-487c-b400-276541c2e8c4</string>
+</dict>
+</plist>
