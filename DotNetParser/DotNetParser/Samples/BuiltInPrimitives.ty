@@ -1,4 +1,5 @@
 ﻿primitives
+IntId Integer 1 max
 ShortString String 1 50
 LongString String 1 255
 Date Date min max

@@ -10,7 +10,11 @@ module SemanticTypes =
         baseType:  CommonDataRequirements
     }
     
+    type TypeProperty = {
+        name: string
+        propType: CustomPrimitive
+    }
     type CustomType= {
         name: string;
-        props: CustomPrimitive list
+        props: TypeProperty list
     }

@@ -47,7 +47,7 @@ module SemanticBuilders =
     let mapPrimitiveToSemantic (info: CustomPrimitiveInfo) : CustomPrimitive =
         match info.baseType with 
         | "String"      -> 
-            { name = info.name; baseType = CommonDataRequirementsString {Size = parseNumParam info.baseArgs.[0];   MinSize = parseNumParam info.baseArgs.[1];  } }
+            { name = info.name; baseType = CommonDataRequirementsString {MinSize  = parseNumParam info.baseArgs.[0];   Size = parseNumParam info.baseArgs.[1];  } }
         | "Integer"     ->
             { name = info.name; baseType = CommonDataRequirementsInt { MinValue = parseNumParam info.baseArgs.[0]; MaxValue = parseNumParam info.baseArgs.[1];  } }
         | "Decimal"     ->
@@ -75,9 +75,14 @@ module SemanticBuilders =
             props = info.props 
                 |> Seq.map 
                     (fun p -> 
-                        allPrimitveTypes 
-                        |> Seq.tryFind (fun cp -> cp.name.ToUpper() = p.propTypeName.ToUpper()) 
-                        |> Option.defaultValue BuiltinPrimitives.UnkownPrimitive
+                        {
+                            TypeProperty.name =  p.name;
+                            propType =  
+                                allPrimitveTypes 
+                                |> Seq.tryFind (fun cp -> cp.name.ToUpper() = p.propTypeName.ToUpper()) 
+                                |> Option.defaultValue BuiltinPrimitives.UnkownPrimitive
+                        }
+                        
                         ) 
                 |> Seq.toList
         }
