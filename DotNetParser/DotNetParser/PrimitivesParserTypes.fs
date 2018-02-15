@@ -7,6 +7,7 @@ module PrimitivesParserTypes =
         | String
         | Integer
         | Decimal
+        | Money
         | Date
         | DateTime
         | Binary
@@ -20,6 +21,8 @@ module PrimitivesParserTypes =
         { MinValue: int; MaxValue: int;  }
     type CommonDataRequirementsDecimal =
         {Size: int; Precision: int;  MinValue: decimal; MaxValue: decimal;  }
+    type CommonDataRequirementsMoney =
+        { MinValue: decimal; MaxValue: decimal;  }
     type CommonDataRequirementsDate =
         {  MinValue: System.DateTime; MaxValue: System.DateTime;  }
     type CommonDataRequirementsDateTime =
@@ -35,6 +38,7 @@ module PrimitivesParserTypes =
         | CommonDataRequirementsDate of CommonDataRequirementsDate
         | CommonDataRequirementsDateTime of CommonDataRequirementsDateTime
         | CommonDataRequirementsBinary of CommonDataRequirementsBinary
+        | CommonDataRequirementsMoney of CommonDataRequirementsMoney
 
     type PrimitiveNameElement = {
         name: string

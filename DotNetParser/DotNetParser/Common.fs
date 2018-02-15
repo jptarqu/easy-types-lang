@@ -27,16 +27,21 @@ module Common =
         |> Seq.head
     
     let getNextWord(line: string, wordBoundary: char): WordInfo =
-        let mutable startIndex = 0
-        if (line.[0] = wordBoundary) then
-            startIndex <- getIndexAfterToken(line, wordBoundary)
-        let firstWordEndIdx = line.IndexOf(wordBoundary, startIndex)
-        if (firstWordEndIdx > 1) then
-            let word = line.Substring(startIndex, firstWordEndIdx)
-            let restOfLine = line.Substring(firstWordEndIdx)
-            { word = word; restOfLine = restOfLine; startIndex = startIndex; endIndex = firstWordEndIdx }
-        else
-            { word =  ""; restOfLine = line; startIndex = startIndex; endIndex=  0 }
+        if line.Length > 0 then 
+            let mutable startIndex = 0
+            if (line.[0] = wordBoundary) then
+                startIndex <- getIndexAfterToken(line, wordBoundary)
+            let firstWordEndIdx = line.IndexOf(wordBoundary, startIndex)
+            if (firstWordEndIdx > 1) then
+                let word = line.Substring(startIndex, firstWordEndIdx - startIndex)
+                let restOfLine = line.Substring(firstWordEndIdx)
+                { word = word; restOfLine = restOfLine; startIndex = startIndex; endIndex = firstWordEndIdx }
+            else
+                let word = line.Substring(startIndex)
+                let restOfLine = ""
+                { word =  word; restOfLine = restOfLine; startIndex = startIndex; endIndex=  0 }
+         else 
+            { word =  ""; restOfLine = line; startIndex = 0; endIndex=  0 }
         
     let getNextWords(line: string, wordBoundary: char): WordInfo[] =
         let words = LinkedList<WordInfo>()

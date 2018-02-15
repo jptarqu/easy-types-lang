@@ -1,0 +1,12 @@
+﻿primitives
+ShortString String 1 50
+LongString String 1 255
+Date Date min max
+DateTime DateTime min max
+Money Money -9999999999.99 9999999999.99
+PositiveMoney Money 0 9999999999.99
+NegativeMoney Money -9999999999.99 0 
+PositiveInt Integer 0 9999999999
+NegativeInt Integer 9999999999 0
+Int Integer -9999999999 9999999999
+Decimal Decimal -9999999999.9999 9999999999.9999

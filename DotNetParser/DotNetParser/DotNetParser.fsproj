@@ -70,7 +70,12 @@
     <Compile Include="CustomTypesParserTypes.fs" />
     <Compile Include="CustomTypesParser.fs" />
     <Compile Include="SemanticTypes.fs" />
+    <Compile Include="BuiltinPrimitives.fs" />
+    <Compile Include="SemanticBuilders.fs" />
     <Compile Include="Program.fs" />
+    <None Include="BuiltInPrimitives.ty">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="mscorlib" />
