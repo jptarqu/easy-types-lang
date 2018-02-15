@@ -3,11 +3,26 @@
 open EasyTypes.SqlGenerator
 open DotNetParser
 open System.IO
+
+
+let createDir (folder:string) =
+    if (not (Directory.Exists folder)) then
+        Directory.CreateDirectory folder |> ignore
+
 [<EntryPoint>]
 let main argv = 
 
     let semanticTypes = SemanticCompiler.CompileFolder @".\Samples" |> Seq.toList
-    let tablesFileContents = semanticTypes |> Seq.map SqlTableGenerator.buildTable |> String.concat "\n"
-    File.WriteAllText("sqlTables.sql",tablesFileContents)
-    printfn "%A" tablesFileContents
+    semanticTypes 
+        |> Seq.iter (fun t ->
+            createDir "Tables"
+            
+            File.WriteAllText("Tables\\" + t.name + ".sql", SqlTableGenerator.buildTable t |> SqlCommon.FormatSql)
+        ) 
+    semanticTypes 
+        |> Seq.iter (fun t ->
+            createDir "StoredProcedures"
+            File.WriteAllText("StoredProcedures\\spInsert" + t.name + ".sql", SqlStoredProcGenerator.buildInsertSp t |> SqlCommon.FormatSql)
+        ) 
+
     0 // return an integer exit code

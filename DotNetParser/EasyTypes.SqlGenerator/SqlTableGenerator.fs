@@ -3,19 +3,7 @@
 module SqlTableGenerator =
     open DotNetParser.PrimitivesParserTypes
     open DotNetParser.SemanticTypes
-
-    let private convertToSqlType dataReqs =
-        match dataReqs with
-        | CommonDataRequirementsString dreq -> "varchar(" +  dreq.Size.ToString() + ")"
-        | CommonDataRequirementsInt _ -> "int"
-        | CommonDataRequirementsDecimal dreq -> "numeric(" +  dreq.Size.ToString() + ", " + dreq.Precision.ToString() + ")"
-        | CommonDataRequirementsDate _ -> "Date"
-        | CommonDataRequirementsDateTime _ -> "DateTime"
-        | CommonDataRequirementsMoney _ -> "Money"
-        | CommonDataRequirementsBinary _ -> "varbinary(max)"
-        | _ -> "varchar(10)"
-    let private isPrimaryKey  (p:TypeProperty) = 
-        p.propType.name = "IntId"
+    open SqlCommon
 
     let private buildColumn (p:TypeProperty): string =
         let colCode = p.name + " " + convertToSqlType(p.propType.baseType) + " NOT NULL"
