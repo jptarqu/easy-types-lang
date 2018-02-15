@@ -5,6 +5,7 @@ open DotNetParser
 open System.IO
 [<EntryPoint>]
 let main argv = 
+
     let semanticTypes = SemanticCompiler.CompileFolder @".\Samples" |> Seq.toList
     let tablesFileContents = semanticTypes |> Seq.map SqlTableGenerator.buildTable |> String.concat "\n"
     File.WriteAllText("sqlTables.sql",tablesFileContents)
