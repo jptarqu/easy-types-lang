@@ -12,7 +12,9 @@ module SqlStoredProcGenerator =
     let private buildParam (p:TypeProperty): string =
         let colCode = "@" + p.name + " " + convertToSqlType(p.propType.baseType) 
         colCode
-
+    
+    let nameForSpAdd  (customType: CustomType ) : string =
+        "spInsert" + (customType.name)
     let buildInsertSp (customType: CustomType ) : string =
         let parameters = customType.props |> Seq.filter (isAutoDateColumn >> not) |> Seq.map buildParam 
         let parameterValues = 
@@ -23,7 +25,7 @@ module SqlStoredProcGenerator =
                 else
                     "@" + p.name
                 )
-        let header = "CREATE PROCEDURE  [spInsert" + (customType.name) + "]"
+        let header = "CREATE PROCEDURE  [" + nameForSpAdd(customType) + "]"
         "\n" + header + "\n" + (String.concat ",\n" parameters) + "\nAS\n" +
         "	
         insert into [" + customType.name + "]
