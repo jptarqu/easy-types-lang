@@ -58,9 +58,6 @@
     <Compile Include="AssemblyInfo.fs" />
     <None Include="App.config" />
     <Content Include="packages.config" />
-    <Compile Include="Common.fs" />
-    <Compile Include="PrimitivesParserTypes.fs" />
-    <Compile Include="PrimitivesParser.fs" />
     <None Include="Samples\samplePrimitives.ty">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -70,12 +67,6 @@
     <None Include="Samples\BuiltInPrimitives.ty">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <Compile Include="CustomTypesParserTypes.fs" />
-    <Compile Include="CustomTypesParser.fs" />
-    <Compile Include="SemanticTypes.fs" />
-    <Compile Include="BuiltinPrimitives.fs" />
-    <Compile Include="SemanticBuilders.fs" />
-    <Compile Include="SemanticCompiler.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
   <ItemGroup>
