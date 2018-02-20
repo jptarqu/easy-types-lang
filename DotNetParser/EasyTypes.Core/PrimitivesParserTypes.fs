@@ -11,7 +11,16 @@ module PrimitivesParserTypes =
         | Date
         | DateTime
         | Binary
-
+        
+    let PrimitiveTypesNames = [|
+       "String"
+       "Integer"
+       "Decimal"
+       "Money"
+       "Date"
+       "DateTime"
+       "Binary"
+       |]
     type CommonDataRequirementsString =
         {Size: int;   MinSize: int;  }
 
@@ -57,7 +66,7 @@ module PrimitivesParserTypes =
         lineNum: int
         nameElement: PrimitiveNameElement
         primitiveBaseTypeElement: BasePrimitiveTypeElement option
-        baseArguments: BasePrimtiveArgElement seq
+        baseArguments: BasePrimtiveArgElement array
     }
 
     
@@ -77,7 +86,7 @@ module PrimitivesParserTypes =
         baseArgs: string array
     }
     type ParsePrimtivesFileInfo = {
-        linesParsed: PrimitiveSyntaxLineType seq
+        linesParsed: PrimitiveSyntaxLineType array
         customPrimitives: CustomPrimitiveInfo seq
     }
 

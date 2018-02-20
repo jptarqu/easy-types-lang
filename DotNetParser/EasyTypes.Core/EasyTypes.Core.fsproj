@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="Common.fs" />
+    <Compile Include="PrimitivesParserTypes.fs" />
+    <Compile Include="PrimitivesParser.fs" />
+    <Compile Include="CustomTypesParserTypes.fs" />
+    <Compile Include="CustomTypesParser.fs" />
+    <Compile Include="SemanticTypes.fs" />
+    <Compile Include="BuiltinPrimitives.fs" />
+    <Compile Include="SemanticBuilders.fs" />
+    <Compile Include="SemanticCompiler.fs" />
+  </ItemGroup>
+
+</Project>

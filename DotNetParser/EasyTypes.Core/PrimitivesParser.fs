@@ -44,7 +44,7 @@ module PrimitivesParser =
                         lineNum= lineNum;
                         nameElement = nameElement;
                         primitiveBaseTypeElement= baseTypeElement;
-                        baseArguments = baseArguments
+                        baseArguments = baseArguments |> Seq.toArray
                     }
                 ) |> ignore
             
@@ -72,8 +72,30 @@ module PrimitivesParser =
                         }
                 customPrimitives.AddLast(currType) |> ignore
         )
+        
             
         
-        { linesParsed =linesParsed; customPrimitives = customPrimitives}
+        { linesParsed =linesParsed |> Seq.toArray ; customPrimitives = customPrimitives}
         
     
+    let isPosABaseTypeForPrimtive (fileInfo: ParsePrimtivesFileInfo) (charNum: int) (lineNumber: int) =
+        let syntaxLineFound = 
+            fileInfo.linesParsed 
+            |> Array.tryFind (fun l -> 
+                match l with 
+                | PrimitiveLine l -> l.lineNum = lineNumber
+                | _ -> false
+         )
+        match syntaxLineFound with
+        | Some (PrimitiveLine l) -> 
+             ((l.nameElement.position.endPos + 1) < charNum) &&
+                ((l.baseArguments |> Seq.length) = 0 ||
+                    ((l.baseArguments.[0].position.startPos) > charNum)
+                )
+        | None -> false
+    
+    let GetSuggestionsAt(fileInfo: ParsePrimtivesFileInfo, charNum: int, lineNumber: int) =
+        if (isPosABaseTypeForPrimtive fileInfo charNum lineNumber) then
+            PrimitivesParserTypes.PrimitiveTypesNames
+        else
+            [||]
