@@ -4,8 +4,14 @@ module DataProviderGenerator =
     open DotNetParser.SemanticTypes
 
     
+    let isPrimaryKey  (p:TypeProperty) = 
+        p.propType.name = "IntId"
+
     let private isAutoDateColumn (p:TypeProperty) =
         p.name = "CreatedOn" || p.name = "ModifiedOn" 
+        
+    let private autoGenColumn (p:TypeProperty) =
+        isAutoDateColumn p || isPrimaryKey p
 
     let private buildParam (p:TypeProperty): string =
         p.name + " = rendition." + p.name

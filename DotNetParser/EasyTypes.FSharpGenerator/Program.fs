@@ -20,7 +20,6 @@ let parseArgs (argv:string array) =
 [<EntryPoint>]
 let main argv = 
     let (inputFOlder, outputFolder, groupName) = parseArgs argv
-    let groupName = if argv.Length > 0 then argv.[0] else @"Samples"
     let semanticTypes = SemanticCompiler.CompileFolder inputFOlder |> Seq.toList
     semanticTypes 
         |> Seq.iter (fun t ->

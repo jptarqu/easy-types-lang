@@ -22,6 +22,7 @@ module SqlStoredProcGenerator =
         let parameters = customType.props |> Seq.filter (autoGenColumn >> not) |> Seq.map buildParam 
         let parameterValues = 
             customType.props 
+            |> Seq.filter (isPrimaryKey >> not)
             |> Seq.map (fun p -> 
                 if isAutoDateColumn(p) then
                     "GetDate()"
