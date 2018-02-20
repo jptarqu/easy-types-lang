@@ -9,20 +9,28 @@ let createDir (folder:string) =
     if (not (Directory.Exists folder)) then
         Directory.CreateDirectory folder |> ignore
 
+let parseArgs (argv:string array) =
+    if (argv.Length > 0) then
+        (argv.[0], argv.[1])
+    else 
+        (@".\Samples", @".\GeneratedSamples")
+
 [<EntryPoint>]
 let main argv = 
-
-    let semanticTypes = SemanticCompiler.CompileFolder @".\Samples" |> Seq.toList
+    let (inputFOlder, outputFolder) = parseArgs argv
+    let semanticTypes = SemanticCompiler.CompileFolder inputFOlder |> Seq.toList
     semanticTypes 
         |> Seq.iter (fun t ->
-            createDir "Tables"
+            let newFolder = (Path.Combine(outputFolder,"Tables"))
+            createDir newFolder
             
-            File.WriteAllText("Tables\\" + t.name + ".sql", SqlTableGenerator.buildTable t |> SqlCommon.FormatSql)
+            File.WriteAllText(newFolder + "\\" + t.name + ".sql", SqlTableGenerator.buildTable t |> SqlCommon.FormatSql)
         ) 
     semanticTypes 
         |> Seq.iter (fun t ->
-            createDir "StoredProcedures"
-            File.WriteAllText("StoredProcedures\\spInsert" + t.name + ".sql", SqlStoredProcGenerator.buildInsertSp t |> SqlCommon.FormatSql)
+            let newFolder = (Path.Combine(outputFolder,"StoredProcedures"))
+            createDir newFolder
+            File.WriteAllText(newFolder + "\\spInsert" + t.name + ".sql", SqlStoredProcGenerator.buildInsertSp t |> SqlCommon.FormatSql)
         ) 
 
     0 // return an integer exit code

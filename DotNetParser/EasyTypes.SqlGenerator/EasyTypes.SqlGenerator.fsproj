@@ -82,9 +82,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DotNetParser\DotNetParser.fsproj">
-      <Name>DotNetParser</Name>
-      <Project>{e6c09f3c-5c65-426a-b6c4-fe12a81b1db8}</Project>
+    <ProjectReference Include="..\EasyTypes.Core\EasyTypes.Core.fsproj">
+      <Name>EasyTypes.Core</Name>
+      <Project>{56979794-a657-4aa7-ae59-8b233200b9d0}</Project>
       <Private>True</Private>
     </ProjectReference>
   </ItemGroup>
