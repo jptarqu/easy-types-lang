@@ -8,6 +8,9 @@ module SqlStoredProcGenerator =
     
     let private isAutoDateColumn (p:TypeProperty) =
         p.name = "CreatedOn" || p.name = "ModifiedOn" 
+        
+    let private autoGenColumn (p:TypeProperty) =
+        isAutoDateColumn p || isPrimaryKey p
 
     let private buildParam (p:TypeProperty): string =
         let colCode = "@" + p.name + " " + convertToSqlType(p.propType.baseType) 
@@ -16,7 +19,7 @@ module SqlStoredProcGenerator =
     let nameForSpAdd  (customType: CustomType ) : string =
         "spInsert" + (customType.name)
     let buildInsertSp (customType: CustomType ) : string =
-        let parameters = customType.props |> Seq.filter (isAutoDateColumn >> not) |> Seq.map buildParam 
+        let parameters = customType.props |> Seq.filter (autoGenColumn >> not) |> Seq.map buildParam 
         let parameterValues = 
             customType.props 
             |> Seq.map (fun p -> 
