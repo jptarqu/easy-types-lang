@@ -1,9 +1,9 @@
 relationships
 
-relationship StudentClassroom 
+relationship StudentAssignmentStudent
     StudentsAssignments StudentClassroomAssignment many StudentId
     Student Student one StudentId
 
-relationship StudentClassroom 
+relationship StudentAssignmentClassroom 
     StudentsAssignments StudentClassroomAssignment many ClassroomId
     Class Classroom one ClassroomId
