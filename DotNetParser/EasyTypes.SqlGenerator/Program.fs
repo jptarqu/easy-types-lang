@@ -31,6 +31,7 @@ let main argv =
             let newFolder = (Path.Combine(outputFolder,"StoredProcedures"))
             createDir newFolder
             File.WriteAllText(newFolder + "\\spInsert" + t.name + ".sql", SqlStoredProcGenerator.buildInsertSp t |> SqlCommon.FormatSql)
+            File.WriteAllText(newFolder + "\\spGet" + t.name + ".sql", SqlStoredProcGenerator.buildGetSp t |> SqlCommon.FormatSql)
         ) 
 
     0 // return an integer exit code

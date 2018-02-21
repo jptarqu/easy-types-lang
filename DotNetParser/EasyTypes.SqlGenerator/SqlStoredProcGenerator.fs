@@ -36,3 +36,23 @@ module SqlStoredProcGenerator =
 	    select " + (String.concat ",\n" parameterValues) + "
 
 	    select cast(@@IDENTITY as int) [IdGenerated]"
+
+    let nameForSpGet  (customType: CustomType ) : string =
+        "spGet " + (customType.name)
+        
+    let private buildCondition (p:TypeProperty): string =
+        let colCode = p.name  + " = @" + p.name 
+        colCode
+
+    let buildGetSp (customType: CustomType ) : string =
+        let parameters = customType.props |> Seq.filter isPrimaryKey |> Seq.map buildParam 
+        let conds = customType.props |> Seq.filter isPrimaryKey |> Seq.map buildCondition 
+        let selectedCols = 
+            customType.props 
+            |> Seq.map (fun p ->  p.name
+                )
+        let header = "CREATE PROCEDURE  [" + nameForSpGet(customType) + "]"
+        "\n" + header + "\n" + (String.concat ",\n" parameters) + "\nAS\n" +
+        "	
+	    select TOP 1 " + (String.concat ",\n" selectedCols) + " from [" + customType.name + "] where " + (String.concat "\nAND " conds) + "
+        "

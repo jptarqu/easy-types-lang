@@ -27,7 +27,7 @@ module DataProviderGenerator =
         let renditionType = customType.name + "Rendition"
         "
 
-    let " + funcName + " " + (String.concat " " idCols) + " : =
+    let " + funcName + " " + (String.concat " " idCols) + " =
        asyncTrial {
             use queryCmd = new DbSchema.dbo.sp" + funcName + "ById()
             try
