@@ -16,6 +16,38 @@ module DataProviderGenerator =
     let private buildParam (p:TypeProperty): string =
         p.name + " = rendition." + p.name
 
+    let private buildGetParam (p:TypeProperty): string =
+        "(" + p.name + " : int)"
+        
+    let GenerateGet (customType: CustomType ) : string =
+        let idCols = customType.props |> Seq.filter isPrimaryKey  |> Seq.map buildGetParam
+        let passedParams = customType.props |> Seq.filter isPrimaryKey |> Seq.map buildParam
+        let paramsForReturnRecord = customType.props |> Seq.map buildParam
+        let funcName = "Get" + customType.name
+        let renditionType = customType.name + "Rendition"
+        "
+
+    let " + funcName + " " + (String.concat " " idCols) + " : =
+       asyncTrial {
+            use queryCmd = new DbSchema.dbo.sp" + funcName + "ById()
+            try
+                let! sqlresults = queryCmd.AsyncExecuteSingle(" + (String.concat ", " paramsForReturnRecord) + ")
+                return 
+                    match sqlresults with
+                    | Some rendition -> 
+                        Some  {
+                            " + (String.concat "; " passedParams) + "
+                        }
+                    |None -> None
+                
+
+            with
+            | ex ->
+                let! u = failWithException<" + renditionType + " option> ex \"" + funcName + "\" 
+                return u
+        }
+        "
+
     let GenerateAdd nameSpace (customType: CustomType ) : string =
         let passedParams = customType.props |> Seq.filter (isAutoDateColumn >> not) |> Seq.map buildParam
         let moduleName =  customType.name + "Data" 
@@ -40,4 +72,5 @@ module " + moduleName  + " =
                 let! u = failWithException<int> ex \"" + funcName + "\" 
                 return u
         }
+    " + (GenerateGet customType) + "
         "
