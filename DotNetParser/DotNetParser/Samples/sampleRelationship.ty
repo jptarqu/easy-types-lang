@@ -1,0 +1,9 @@
+relationships
+
+relationship StudentClassroom 
+    StudentsAssignments StudentClassroomAssignment many StudentId
+    Student Student one StudentId
+
+relationship StudentClassroom 
+    StudentsAssignments StudentClassroomAssignment many ClassroomId
+    Class Classroom one ClassroomId

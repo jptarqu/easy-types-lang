@@ -1,7 +1,14 @@
 ﻿types
 
-type Hellou
+type Student
+    StudentId IntId
     jolo username
-    huhh positiveNumber
-    njhhj ShortString
-    hh ShortString
+
+type Classroom
+    ClassroomId IntId
+    MaxOccupancy positiveNumber
+    Name ShortString
+
+type StudentClassroomAssignment
+    StudentId IntId
+    ClassroomId IntId
