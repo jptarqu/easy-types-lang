@@ -38,7 +38,7 @@ module SqlStoredProcGenerator =
 	    select cast(@@IDENTITY as int) [IdGenerated]"
 
     let nameForSpGet  (customType: CustomType ) : string =
-        "spGet " + (customType.name)
+        "spGet" + (customType.name)
         
     let private buildCondition (p:TypeProperty): string =
         let colCode = p.name  + " = @" + p.name 

@@ -31,12 +31,12 @@ module DataProviderGenerator =
        asyncTrial {
             use queryCmd = new DbSchema.dbo.sp" + funcName + "ById()
             try
-                let! sqlresults = queryCmd.AsyncExecuteSingle(" + (String.concat ", " paramsForReturnRecord) + ")
+                let! sqlresults = queryCmd.AsyncExecuteSingle(" + (String.concat ", " passedParams) + ")
                 return 
                     match sqlresults with
                     | Some rendition -> 
                         Some  {
-                            " + (String.concat "; " passedParams) + "
+                            " + (String.concat "; " paramsForReturnRecord ) + "
                         }
                     |None -> None
                 
