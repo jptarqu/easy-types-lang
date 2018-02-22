@@ -19,6 +19,18 @@ module SqlCommon =
         | CommonDataRequirementsMoney _ -> "Money NOT NULL"
         | CommonDataRequirementsBinary _ -> "varbinary(max) NOT NULL"
         | _ -> "varchar(10) NOT NULL"
+    let convertToSqlTypeForParam dataReqs =
+        match dataReqs with
+        | CommonDataRequirementsString dreq -> 
+            let size = if dreq.Size = System.Int32.MaxValue then "max" else dreq.Size.ToString()
+            "varchar(" +  size + ") "
+        | CommonDataRequirementsInt _ -> "int"
+        | CommonDataRequirementsDecimal dreq -> "numeric(" +  dreq.Size.ToString() + ", " + dreq.Precision.ToString() + ")"
+        | CommonDataRequirementsDate dreq -> "Date" + if dreq.Optional then " = NULL" else ""
+        | CommonDataRequirementsDateTime dreq -> "DateTime" + if dreq.Optional then " = NULL" else ""
+        | CommonDataRequirementsMoney _ -> "Money "
+        | CommonDataRequirementsBinary _ -> "varbinary(max) "
+        | _ -> "varchar(10) "
     let isPrimaryKey  (p:TypeProperty) = 
         p.propType.name = "IntId"
         

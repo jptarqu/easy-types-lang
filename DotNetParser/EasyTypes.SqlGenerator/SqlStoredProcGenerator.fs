@@ -13,7 +13,7 @@ module SqlStoredProcGenerator =
         isAutoDateColumn p || isPrimaryKey p
 
     let private buildParam (p:TypeProperty): string =
-        let colCode = "@" + p.name + " " + convertToSqlType(p.propType.baseType) 
+        let colCode = "@" + p.name + " " + convertToSqlTypeForParam(p.propType.baseType) 
         colCode
     
     let nameForSpAdd  (customType: CustomType ) : string =
