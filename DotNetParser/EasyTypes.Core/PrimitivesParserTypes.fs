@@ -33,9 +33,9 @@ module PrimitivesParserTypes =
     type CommonDataRequirementsMoney =
         { MinValue: decimal; MaxValue: decimal;  }
     type CommonDataRequirementsDate =
-        {  MinValue: System.DateTime; MaxValue: System.DateTime;  }
+        {  MinValue: System.DateTime; MaxValue: System.DateTime; Optional: bool }
     type CommonDataRequirementsDateTime =
-        {  MinValue: System.DateTime; MaxValue: System.DateTime;  }
+        {  MinValue: System.DateTime; MaxValue: System.DateTime; Optional: bool  }
     type CommonDataRequirementsBinary =
         {Size: int;   MinSize: int;  }
 

@@ -9,14 +9,16 @@ module SqlCommon =
 
     let convertToSqlType dataReqs =
         match dataReqs with
-        | CommonDataRequirementsString dreq -> "varchar(" +  dreq.Size.ToString() + ")"
-        | CommonDataRequirementsInt _ -> "int"
-        | CommonDataRequirementsDecimal dreq -> "numeric(" +  dreq.Size.ToString() + ", " + dreq.Precision.ToString() + ")"
-        | CommonDataRequirementsDate _ -> "Date"
-        | CommonDataRequirementsDateTime _ -> "DateTime"
-        | CommonDataRequirementsMoney _ -> "Money"
-        | CommonDataRequirementsBinary _ -> "varbinary(max)"
-        | _ -> "varchar(10)"
+        | CommonDataRequirementsString dreq -> 
+            let size = if dreq.Size = System.Int32.MaxValue then "max" else dreq.Size.ToString()
+            "varchar(" +  size + ") NOT NULL"
+        | CommonDataRequirementsInt _ -> "int NOT NULL"
+        | CommonDataRequirementsDecimal dreq -> "numeric(" +  dreq.Size.ToString() + ", " + dreq.Precision.ToString() + ") NOT NULL"
+        | CommonDataRequirementsDate dreq -> "Date" + if dreq.Optional then " NULL" else " NOT NULL"
+        | CommonDataRequirementsDateTime dreq -> "DateTime" + if dreq.Optional then " NULL" else " NOT NULL"
+        | CommonDataRequirementsMoney _ -> "Money NOT NULL"
+        | CommonDataRequirementsBinary _ -> "varbinary(max) NOT NULL"
+        | _ -> "varchar(10) NOT NULL"
     let isPrimaryKey  (p:TypeProperty) = 
         p.propType.name = "IntId"
         

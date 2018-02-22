@@ -61,9 +61,17 @@ module SemanticBuilders =
             let maxValStr = maxVal.ToString()
             { name = info.name; baseType = CommonDataRequirementsMoney {MinValue = parseDecParam info.baseArgs.[0]; MaxValue = maxVal; } }
         | "Date"        ->
-            { name = info.name; baseType = CommonDataRequirementsDate {MinValue = parseDateParam info.baseArgs.[0]; MaxValue = parseDateParam info.baseArgs.[1]  } }
+            let isOpt = 
+                match info.baseArgs with
+                | [| _; _; "optional" |] -> true
+                | _ -> false
+            { name = info.name; baseType = CommonDataRequirementsDate {MinValue = parseDateParam info.baseArgs.[0]; MaxValue = parseDateParam info.baseArgs.[1] ; Optional = isOpt } }
         | "DateTime"    ->
-            { name = info.name; baseType = CommonDataRequirementsDateTime {MinValue = parseDateTimeParam info.baseArgs.[0]; MaxValue = parseDateTimeParam info.baseArgs.[1]  } }
+            let isOpt = 
+                match info.baseArgs with
+                | [| _; _; "optional" |] -> true
+                | _ -> false
+            { name = info.name; baseType = CommonDataRequirementsDateTime {MinValue = parseDateTimeParam info.baseArgs.[0]; MaxValue = parseDateTimeParam info.baseArgs.[1] ; Optional = isOpt } }
         | "Binary"     ->      
             { name = info.name; baseType = CommonDataRequirementsBinary {Size = parseNumParam info.baseArgs.[0];   MinSize = parseNumParam info.baseArgs.[1];  } }
         | _ ->

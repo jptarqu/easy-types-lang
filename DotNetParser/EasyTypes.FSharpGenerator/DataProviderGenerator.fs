@@ -2,6 +2,7 @@
 
 module DataProviderGenerator = 
     open DotNetParser.SemanticTypes
+    open System
 
     
     let isPrimaryKey  (p:TypeProperty) = 
@@ -14,10 +15,14 @@ module DataProviderGenerator =
         isAutoDateColumn p || isPrimaryKey p
 
     let private buildParam (p:TypeProperty): string =
-        p.name + " = rendition." + p.name
+        let firstLetter = p.name.[0].ToString().ToLower()
+        let rest = p.name.Substring(1)
+        p.name + " = " + (firstLetter + rest)
 
     let private buildGetParam (p:TypeProperty): string =
-        "(" + p.name + " : int)"
+        let firstLetter = p.name.[0].ToString().ToLower()
+        let rest = p.name.Substring(1)
+        "(" + (firstLetter + rest) +  " : int)"
         
     let GenerateGet (customType: CustomType ) : string =
         let idCols = customType.props |> Seq.filter isPrimaryKey  |> Seq.map buildGetParam
