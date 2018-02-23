@@ -61,7 +61,7 @@ module " + moduleName + " =
            
     let Create (r: " + renditionType + ") : RopResult<T,_> =
         trial {
-            let! _ = validate r
+            let! _ = Validate r
             " + (String.concat "\n            " propsAssignments) + "
             return " + moduleName + " {
                 " + (String.concat "\n                " recordAssignments) + "
