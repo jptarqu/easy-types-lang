@@ -48,6 +48,16 @@ module PrimitivesParserTypes =
         | CommonDataRequirementsDateTime of CommonDataRequirementsDateTime
         | CommonDataRequirementsBinary of CommonDataRequirementsBinary
         | CommonDataRequirementsMoney of CommonDataRequirementsMoney
+        member x.GetRenditionTypeName() =
+            match x with
+            | CommonDataRequirementsString _ -> "string"
+            | CommonDataRequirementsStringPattern _ -> "string"
+            | CommonDataRequirementsInt _ -> "int"
+            | CommonDataRequirementsDecimal _ -> "decimal"
+            | CommonDataRequirementsDate _ -> "System.DateTime"
+            | CommonDataRequirementsDateTime _ -> "System.DateTime"
+            | CommonDataRequirementsBinary _ -> "byte[]"
+            | CommonDataRequirementsMoney _ -> "decimal"
 
     type PrimitiveNameElement = {
         name: string

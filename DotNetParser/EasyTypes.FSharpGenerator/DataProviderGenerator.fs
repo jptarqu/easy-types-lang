@@ -3,6 +3,7 @@
 module DataProviderGenerator = 
     open DotNetParser.SemanticTypes
     open System
+    open System
 
     
     let isPrimaryKey  (p:TypeProperty) = 
@@ -18,6 +19,15 @@ module DataProviderGenerator =
         let firstLetter = p.name.[0].ToString().ToLower()
         let rest = p.name.Substring(1)
         p.name + " = " + (firstLetter + rest)
+    let private buildParamForInsert (p:TypeProperty): string =
+        let firstLetter = p.name.[0].ToString().ToUpper()
+        let rest = p.name.Substring(1)
+        p.name + " = rendition." + (firstLetter + rest)
+
+    let private buildParamForGetResult (p:TypeProperty): string =
+        let firstLetter = p.name.[0].ToString().ToUpper()
+        let rest = p.name.Substring(1)
+        (firstLetter + rest) + " = row." + p.name 
 
     let private buildGetParam (p:TypeProperty): string =
         let firstLetter = p.name.[0].ToString().ToLower()
@@ -27,7 +37,7 @@ module DataProviderGenerator =
     let GenerateGet (customType: CustomType ) : string =
         let idCols = customType.props |> Seq.filter isPrimaryKey  |> Seq.map buildGetParam
         let passedParams = customType.props |> Seq.filter isPrimaryKey |> Seq.map buildParam
-        let paramsForReturnRecord = customType.props |> Seq.map buildParam
+        let paramsForReturnRecord = customType.props |> Seq.map buildParamForGetResult
         let funcName = "Get" + customType.name
         let renditionType = customType.name + "Rendition"
         "
@@ -39,7 +49,7 @@ module DataProviderGenerator =
                 let! sqlresults = queryCmd.AsyncExecuteSingle(" + (String.concat ", " passedParams) + ")
                 return 
                     match sqlresults with
-                    | Some rendition -> 
+                    | Some row -> 
                         Some  {
                             " + (String.concat "; " paramsForReturnRecord ) + "
                         }
@@ -54,7 +64,7 @@ module DataProviderGenerator =
         "
 
     let GenerateAdd nameSpace (customType: CustomType ) : string =
-        let passedParams = customType.props |> Seq.filter (isAutoDateColumn >> not) |> Seq.map buildParam
+        let passedParams = customType.props |> Seq.filter (isAutoDateColumn >> not) |> Seq.map buildParamForInsert
         let moduleName =  customType.name + "Data" 
         let funcName = "Add" + customType.name
         "namespace " + nameSpace + "

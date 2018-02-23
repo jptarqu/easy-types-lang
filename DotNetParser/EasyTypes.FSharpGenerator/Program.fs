@@ -15,7 +15,7 @@ let parseArgs (argv:string array) =
     if (argv.Length > 0) then
         (argv.[0], argv.[1], argv.[2])
     else 
-        (@".\Samples", @".\GeneratedSamples", "Samples")
+        (@"..\..\..\DotNetParser\Samples", @".\GeneratedSamples", "Samples")
 
 [<EntryPoint>]
 let main argv = 
@@ -27,11 +27,24 @@ let main argv =
             createDir newFolder
 
             let source = DataProviderGenerator.GenerateAdd groupName t 
-
             printfn "%s" source
-
             let formattedSOurce =  Fantomas.CodeFormatter.formatSourceString false source FormatConfig.Default
             File.WriteAllText(newFolder + "\\" + t.name + "Data.fs",formattedSOurce)
+
+
+            ()
+        ) 
+    semanticTypes 
+        |> Seq.iter (fun t ->
+            let newFolder = (Path.Combine(outputFolder,"Renditions"))
+            createDir newFolder
+
+            let source = RenditionGenerator.Generate groupName t 
+            printfn "%s" source
+            let formattedSOurce =  Fantomas.CodeFormatter.formatSourceString false source FormatConfig.Default
+            File.WriteAllText(newFolder + "\\" + t.name + "Rendition.fs",formattedSOurce)
+
+
             ()
         ) 
     0 // return an integer exit code

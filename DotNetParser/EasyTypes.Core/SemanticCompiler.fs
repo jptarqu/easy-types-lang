@@ -23,7 +23,7 @@ module SemanticCompiler =
                 typeFiles.AddLast(f) |> ignore
             | "primitives" ->
                 primitiveFiles.AddLast(f) |> ignore
-
+            | _ -> ignore()
              
             )
         primitiveFiles, typeFiles
