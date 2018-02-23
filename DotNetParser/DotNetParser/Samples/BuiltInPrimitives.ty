@@ -1,5 +1,6 @@
 ﻿primitives
 IntId Integer 1 max
+ForeignKey Integer 1 max
 ShortString String 1 50
 LongString String 1 255
 Date Date min max
@@ -11,3 +12,5 @@ PositiveInt Integer 0 9999999999
 NegativeInt Integer 9999999999 0
 Int Integer -9999999999 9999999999
 Decimal Decimal -9999999999.9999 9999999999.9999
+OptionalDate Date min max optional
+OptionalDateTime DateTime min max optional
