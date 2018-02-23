@@ -18,7 +18,7 @@ let parseArgs (argv:string array) =
 [<EntryPoint>]
 let main argv = 
     let (inputFOlder, outputFolder) = parseArgs argv
-    let semanticTypes = SemanticCompiler.CompileFolder inputFOlder |> Seq.toList
+    let semanticTypes, _ = SemanticCompiler.CompileFolder inputFOlder 
     semanticTypes 
         |> Seq.iter (fun t ->
             let newFolder = (Path.Combine(outputFolder,"Tables"))

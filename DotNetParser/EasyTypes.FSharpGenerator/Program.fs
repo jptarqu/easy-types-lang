@@ -21,7 +21,7 @@ let parseArgs (argv:string array) =
 [<EntryPoint>]
 let main argv = 
     let (inputFOlder, outputFolder, groupName) = parseArgs argv
-    let semanticTypes = SemanticCompiler.CompileFolder inputFOlder |> Seq.toList
+    let semanticTypes, allPrimitives = SemanticCompiler.CompileFolder inputFOlder 
     semanticTypes 
         |> Seq.iter (fun t ->
             let newFolder = (Path.Combine(outputFolder,"DataProvider"))
@@ -48,7 +48,7 @@ let main argv =
 
             ()
         ) 
-    let writeSource groupName suffix generator (t: CustomType)  = 
+    let writeSource groupName suffix generator (t: 'A when 'A : (member name : string))  = 
     
             let newFolder = (Path.Combine(outputFolder, suffix))
             createDir newFolder
@@ -58,7 +58,20 @@ let main argv =
             let formattedSOurce =  Fantomas.CodeFormatter.formatSourceString false source FormatConfig.Default
             File.WriteAllText(newFolder + "\\" + t.name + suffix + ".fs",formattedSOurce)
             ()
+    let writePropSource suffix generator (t: CustomPrimitive)  = 
+    
+            let newFolder = (Path.Combine(outputFolder, suffix))
+            createDir newFolder
+
+            let source = generator t 
+            printfn "%s" source
+            let formattedSOurce =  Fantomas.CodeFormatter.formatSourceString false source FormatConfig.Default
+            File.WriteAllText(newFolder + "\\" + t.name + suffix + ".fs",formattedSOurce)
+            ()
 
     semanticTypes 
         |> Seq.iter (writeSource groupName "Domain" DomainGenerator.Generate) 
+
+    allPrimitives 
+        |> Seq.iter (writePropSource "Primitive" PrimitiveGeneration.Generate) 
     0 // return an integer exit code

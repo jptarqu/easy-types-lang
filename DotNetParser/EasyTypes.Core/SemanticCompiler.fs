@@ -40,14 +40,15 @@ module SemanticCompiler =
         |> CustomTypesParser.parseTypesLines
         |> ( fun x -> x.customTypes |> Seq.map (SemanticBuilders.mapTypeToSemantic allPrimitives) )
 
-    let CompileFolder (folderPath: string) : CustomType seq=
+    let CompileFolder (folderPath: string) =
         let primitiveFiles, typeFiles = classifyFiles folderPath
         let allPrimitives = 
             primitiveFiles
             |> Seq.collect primitivesCompile
+            |> Seq.toList
         let allTypes =
             typeFiles
             |> Seq.collect (typesCompile allPrimitives)
-        allTypes
+        allTypes |> Seq.toList, allPrimitives 
         
 

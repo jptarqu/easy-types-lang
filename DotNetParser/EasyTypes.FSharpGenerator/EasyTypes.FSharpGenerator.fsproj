@@ -56,6 +56,7 @@
   <Import Project="$(FSharpTargetsPath)" />
   <ItemGroup>
     <Compile Include="AssemblyInfo.fs" />
+    <Compile Include="PrimitiveGeneration.fs" />
     <Compile Include="DataProviderGenerator.fs" />
     <Compile Include="RenditionGenerator.fs" />
     <Compile Include="DomainGenerator.fs" />
