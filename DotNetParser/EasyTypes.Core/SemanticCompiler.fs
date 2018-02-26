@@ -11,9 +11,10 @@ module SemanticCompiler =
     [<Literal>]
     let propsHeader = "primitives"
 
-    let private classifyFiles (folderPath: string): LinkedList<string> * LinkedList<string> =
+    let private classifyFiles (folderPath: string)  =
         let primitiveFiles = LinkedList<string>()
         let typeFiles = LinkedList<string>()
+        let textlookupFiles = LinkedList<string>()
         Directory.EnumerateFiles(folderPath, "*.ty")
         |> Seq.iter (fun f ->
             use st = new StreamReader(f)
@@ -23,16 +24,24 @@ module SemanticCompiler =
                 typeFiles.AddLast(f) |> ignore
             | "primitives" ->
                 primitiveFiles.AddLast(f) |> ignore
+            | "textlookups" ->
+                textlookupFiles.AddLast(f) |> ignore
             | _ -> ignore()
              
             )
-        primitiveFiles, typeFiles
+        textlookupFiles, primitiveFiles, typeFiles 
     
-    let primitivesCompile (filePath: string) = 
+    let lookupsCompile (filePath: string) = 
+        File.ReadAllLines(filePath)
+        |> Seq.skip 1 //we know the header is primitives
+        |> CustomLookupsParser.parseLines
+        |> ( fun x -> x.customLookups |> Seq.map (SemanticBuilders.mapLookupsToSemantic ))
+
+    let primitivesCompile allTextLookups (filePath: string) = 
         File.ReadAllLines(filePath)
         |> Seq.skip 1 //we know the header is primitives
         |> PrimitivesParser.parsePrimitivesLines
-        |> ( fun x -> x.customPrimitives |> Seq.map SemanticBuilders.mapPrimitiveToSemantic )
+        |> ( fun x -> x.customPrimitives |> Seq.map (SemanticBuilders.mapPrimitiveToSemantic allTextLookups ))
 
     let typesCompile allPrimitives (filePath: string) = 
         File.ReadAllLines(filePath)
@@ -41,10 +50,14 @@ module SemanticCompiler =
         |> ( fun x -> x.customTypes |> Seq.map (SemanticBuilders.mapTypeToSemantic allPrimitives) )
 
     let CompileFolder (folderPath: string) =
-        let primitiveFiles, typeFiles = classifyFiles folderPath
+        let textlookupFiles, primitiveFiles, typeFiles = classifyFiles folderPath
+        let allTextLookups =
+            textlookupFiles
+            |> Seq.collect lookupsCompile
+            |> Seq.toArray
         let allPrimitives = 
             primitiveFiles
-            |> Seq.collect primitivesCompile
+            |> Seq.collect (primitivesCompile allTextLookups)
             |> Seq.toList
         let allTypes =
             typeFiles

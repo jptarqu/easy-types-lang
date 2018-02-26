@@ -11,6 +11,7 @@ module PrimitivesParserTypes =
         | Date
         | DateTime
         | Binary
+        | StringChoices
         
     let PrimitiveTypesNames = [|
        "String"
@@ -20,9 +21,15 @@ module PrimitivesParserTypes =
        "Date"
        "DateTime"
        "Binary"
+       "StringChoices"
        |]
     type CommonDataRequirementsString =
         {Size: int;   MinSize: int;  }
+
+    type IdLabelPair<'IdType> = 'IdType * string
+
+    type CommonDataRequirementsStringChoices =
+        { Choices: IdLabelPair<string> array  }
 
     type CommonDataRequirementsStringPattern =
         {Size: int;   MinSize: int; RegexPattern: System.Text.RegularExpressions.Regex; CharValidation: (char->bool)  }
@@ -48,6 +55,7 @@ module PrimitivesParserTypes =
         | CommonDataRequirementsDateTime of CommonDataRequirementsDateTime
         | CommonDataRequirementsBinary of CommonDataRequirementsBinary
         | CommonDataRequirementsMoney of CommonDataRequirementsMoney
+        | CommonDataRequirementsStringChoices of CommonDataRequirementsStringChoices
         member x.GetRenditionTypeName() =
             match x with
             | CommonDataRequirementsString _ -> "string"
@@ -58,6 +66,7 @@ module PrimitivesParserTypes =
             | CommonDataRequirementsDateTime dreq -> "System.DateTime " + if dreq.Optional then " option" else ""
             | CommonDataRequirementsBinary _ -> "byte[]"
             | CommonDataRequirementsMoney _ -> "decimal"
+            | CommonDataRequirementsStringChoices _ -> "string"
 
     type PrimitiveNameElement = {
         name: string

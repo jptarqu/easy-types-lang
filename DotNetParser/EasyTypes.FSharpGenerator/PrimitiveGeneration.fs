@@ -279,6 +279,7 @@ module PrimitiveGeneration =
         let createLogic =
             match p.baseType with 
             | CommonDataRequirementsString r -> CreateCodes.ForStr primitiveName r
+            | CommonDataRequirementsStringChoices r -> ChoicesPrimitiveGenerator.Generate primitiveName r
             | CommonDataRequirementsStringPattern r -> CreateCodes.ForStrPattern primitiveName r
             | CommonDataRequirementsInt r -> CreateCodes.ForInt primitiveName r
             | CommonDataRequirementsDecimal r -> CreateCodes.ForDecimal primitiveName r

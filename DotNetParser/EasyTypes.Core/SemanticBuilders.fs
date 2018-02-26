@@ -43,11 +43,26 @@ module SemanticBuilders =
             match isNUm with
             | true -> num
             | false -> System.DateTime(1970,01, 01)
+    
+    let mapLookupsToSemantic  (info: CustomLookupsParserTypes.CustomLookupInfo)   : CustomTextLookup = 
+        {
+            name = info.name;
+            pairs = info.props 
+                |> Seq.map 
+                    (fun p -> p.id, p.label                      
+                        ) 
+                |> Seq.toArray
+        }
+        
 
-    let mapPrimitiveToSemantic (info: CustomPrimitiveInfo) : CustomPrimitive =
+    let mapPrimitiveToSemantic (allLookups: CustomTextLookup array) (info: CustomPrimitiveInfo) : CustomPrimitive =
         match info.baseType with 
         | "String"      -> 
             { name = info.name; baseType = CommonDataRequirementsString {MinSize  = parseNumParam info.baseArgs.[0];   Size = parseNumParam info.baseArgs.[1];  } }
+        | "StringChoices"      -> 
+            //let choices = info.baseArgs |> Array.chunkBySize 2 |> Array.map (fun a -> if a.Length =2 then a.[0], a.[1] else a.[0], "")
+            let lookup = allLookups |> Array.tryFind (fun e -> e.name =  info.baseArgs.[0])  |> Option.defaultValue SemanticTypes.LookupNotFound
+            { name = info.name; baseType = CommonDataRequirementsStringChoices { Choices = lookup.pairs } }
         | "Integer"     ->
             { name = info.name; baseType = CommonDataRequirementsInt { MinValue = parseNumParam info.baseArgs.[0]; MaxValue = parseNumParam info.baseArgs.[1];  } }
         | "Decimal"     ->

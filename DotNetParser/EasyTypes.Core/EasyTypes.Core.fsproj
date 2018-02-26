@@ -6,6 +6,8 @@
 
   <ItemGroup>
     <Compile Include="Common.fs" />
+    <Compile Include="CustomLookupsParserTypes.fs" />
+    <Compile Include="CustomLookupsParser.fs" />
     <Compile Include="PrimitivesParserTypes.fs" />
     <Compile Include="PrimitivesParser.fs" />
     <Compile Include="CustomTypesParserTypes.fs" />

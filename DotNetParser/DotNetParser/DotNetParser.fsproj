@@ -67,6 +67,7 @@
     <None Include="Samples\BuiltInPrimitives.ty">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="Samples\sampleLookup.ty" />
     <Compile Include="Program.fs" />
   </ItemGroup>
   <ItemGroup>

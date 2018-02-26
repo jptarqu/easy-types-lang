@@ -1,3 +1,4 @@
 ﻿primitives
 username String 3 60
 positiveNumber Integer 0 max
+SutdentStatus StringChoices Status
