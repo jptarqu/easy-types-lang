@@ -42,8 +42,9 @@ module PrimitiveGeneration =
         |> CommonValidations.isCorrectPattern regexPatter
         >=> " + primitiveName + "
 
-    let FromString = create
+    let FromString = Create
         
+
     let ToString (" + primitiveName + " s) : string =
         s
 
@@ -66,9 +67,7 @@ module PrimitiveGeneration =
         str
         |> CommonValidations.ToInt
         >>= Create
-
-    let Apply f (" + primitiveName + " s) =
-        f s
+        
             
     let ToString (" + primitiveName + " s) : string =
         s.ToString()
@@ -85,16 +84,14 @@ module PrimitiveGeneration =
         f s
     let Create (s:" + baseType + ") =
         s
-        |> CommonValidations.isWithinRange " + req.MinValue.ToString() + " " + req.MaxValue.ToString() + "
+        |> CommonValidations.isWithinRange " + req.MinValue.ToString() + "M " + req.MaxValue.ToString() + "M
         >=> " + primitiveName + "
 
     let FromString (str:string) =
         str
         |> CommonValidations.ToDecimal
         >>= Create
-
-    let Apply f (" + primitiveName + " s) =
-        f s
+        
             
     let ToString (" + primitiveName + " s) : string =
         s.ToString()
@@ -112,16 +109,14 @@ module PrimitiveGeneration =
         f s
     let Create (s:" + baseType + ") =
         s
-        |> CommonValidations.isWithinRange " + req.MinValue.ToString() + " " + req.MaxValue.ToString() + "
+        |> CommonValidations.isWithinRange " + req.MinValue.ToString() + "M " + req.MaxValue.ToString() + "M
         >=> " + primitiveName + "
 
     let FromString (str:string) =
         str
         |> CommonValidations.ToDecimal
         >>= Create
-
-    let Apply f (" + primitiveName + " s) =
-        f s
+        
             
     let ToString (" + primitiveName + " s) : string =
         s.ToString()
@@ -129,16 +124,52 @@ module PrimitiveGeneration =
     let ToRendition (" + primitiveName + " s) : " + baseType + " =
         s
     "
-        let ForDate (primitiveName: string) (req: CommonDataRequirementsDate) =
-            let baseType = "System.DateTime"
+        let ForDateOptional (primitiveName: string) (req: CommonDataRequirementsDate) =
+            let baseType = "System.DateTime option"
             "
+    type T = private " + primitiveName + " of " + baseType + " 
+
+    let Apply f (" + primitiveName + " s) =
+        f s
+    let minDate = new System.DateTime(" + req.MinValue.ToString("yyyy,MM,dd") + ")
+    let maxDate = new System.DateTime(" + req.MaxValue.ToString("yyyy,MM,dd") + ")
+    let Create (s:" + baseType + ") =
+        match s with
+        | None -> pass (" + primitiveName + " s)
+        | Some v ->
+            v
+            |> CommonValidations.isWithinRange minDate maxDate 
+            >=> Some
+            >=> " + primitiveName + "
+            
+    let FromString (str:string) =
+        if String.IsNullOrEmpty(str) then pass None else (str
+            |> CommonValidations.ToDate >=> Some)
+        >>= Create
+        
+            
+    let ToString (" + primitiveName + " s) : string =
+        match s with
+        | Some v -> v.ToString(\"yyyy-MM-dd\")
+        | None -> \"\"
+
+    let ToRendition (" + primitiveName + " s) : " + baseType + " =
+        s
+    "
+        let ForDate (primitiveName: string) (req: CommonDataRequirementsDate) =
+            if req.Optional then 
+                ForDateOptional primitiveName req
+            else 
+                let baseType = "System.DateTime"
+                "
     type T = private " + primitiveName + " of " + baseType + "
 
     let Apply f (" + primitiveName + " s) =
         f s
+
+    let minDate = new System.DateTime(" + req.MinValue.ToString("yyyy,MM,dd") + ")
+    let maxDate = new System.DateTime(" + req.MaxValue.ToString("yyyy,MM,dd") + ")
     let Create (s:" + baseType + ") =
-        let minDate = new System.DateTime(" + req.MinValue.ToString("yyyy,MM,dd") + ")
-        let maxDate = new System.DateTime(" + req.MaxValue.ToString("yyyy,MM,dd") + ")
         s
         |> CommonValidations.isWithinRange minDate maxDate 
         >=> " + primitiveName + "
@@ -147,9 +178,7 @@ module PrimitiveGeneration =
         str
         |> CommonValidations.ToDate
         >>= Create
-
-    let Apply f (" + primitiveName + " s) =
-        f s
+        
             
     let ToString (" + primitiveName + " s) : string =
         s.ToString(\"yyyy-MM-dd\")
@@ -162,29 +191,30 @@ module PrimitiveGeneration =
             let baseType = "System.DateTime option"
             "
     type T = private " + primitiveName + " of " + baseType + " 
-
+    
     let Apply f (" + primitiveName + " s) =
         f s
+    let minDate = new System.DateTime(" + req.MinValue.ToString("yyyy,MM,dd, HH, mm, ss") + ")
+    let maxDate = new System.DateTime(" + req.MaxValue.ToString("yyyy,MM,dd, HH, mm, ss") + ")
     let Create (s:" + baseType + ") =
         match s with
-        | None -> pass " + primitiveName + " s
+        | None -> pass (" + primitiveName + " s)
         | Some v ->
-            let minDate = new System.DateTime(" + req.MinValue.ToString("yyyy,MM,dd, HH, mm, ss") + ")
-            let maxDate = new System.DateTime(" + req.MaxValue.ToString("yyyy,MM,dd, HH, mm, ss") + ")
             v
             |> CommonValidations.isWithinRange minDate maxDate 
+            >=> Some
             >=> " + primitiveName + "
             
     let FromString (str:string) =
-        if String.IsNullOrEmpty(str) then pass None else (str
+        if System.String.IsNullOrEmpty(str) then pass None else (str
             |> CommonValidations.ToDateTime >=> Some)
         >>= Create
-
-    let Apply f (" + primitiveName + " s) =
-        f s
+        
             
     let ToString (" + primitiveName + " s) : string =
-        s.ToString()
+        match s with
+        | Some v -> v.ToString()
+        | None -> \"\"
 
     let ToRendition (" + primitiveName + " s) : " + baseType + " =
         s
@@ -200,9 +230,9 @@ module PrimitiveGeneration =
 
     let Apply f (" + primitiveName + " s) =
         f s
+    let minDate = new System.DateTime(" + req.MinValue.ToString("yyyy,MM,dd, HH, mm, ss") + ")
+    let maxDate = new System.DateTime(" + req.MaxValue.ToString("yyyy,MM,dd, HH, mm, ss") + ")
     let Create (s:" + baseType + ") =
-        let minDate = new System.DateTime(" + req.MinValue.ToString("yyyy,MM,dd, HH, mm, ss") + ")
-        let maxDate = new System.DateTime(" + req.MaxValue.ToString("yyyy,MM,dd, HH, mm, ss") + ")
         s
         |> CommonValidations.isWithinRange minDate maxDate 
         >=> " + primitiveName + "
@@ -211,9 +241,7 @@ module PrimitiveGeneration =
         str
         |> CommonValidations.ToDate
         >>= Create
-
-    let Apply f (" + primitiveName + " s) =
-        f s
+        
             
     let ToString (" + primitiveName + " s) : string =
         s.ToString()
@@ -236,9 +264,7 @@ module PrimitiveGeneration =
     let FromString (str:string) =
         str.ToCharArray()
         >>= Create
-
-    let Apply f (" + primitiveName + " s) =
-        f s
+        
             
     let ToString (" + primitiveName + " s) : string =
         s.ToString()
