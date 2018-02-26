@@ -14,20 +14,20 @@ let createDir (folder:string) =
         
 let parseArgs (argv:string array) =
     if (argv.Length > 0) then
-        (argv.[0], argv.[1], argv.[2])
+        (argv.[0], argv.[1], argv.[2], argv.[3])
     else 
-        (@"..\..\..\DotNetParser\Samples", @".\GeneratedSamples", "Samples")
+        (@"..\..\..\DotNetParser\Samples", @".\GeneratedSamples", "Samples", "Samples")
 
 [<EntryPoint>]
 let main argv = 
-    let (inputFOlder, outputFolder, groupName) = parseArgs argv
+    let (inputFOlder, outputFolder, coreNamespace, dataNamespace) = parseArgs argv
     let semanticTypes, allPrimitives = SemanticCompiler.CompileFolder inputFOlder 
     semanticTypes 
         |> Seq.iter (fun t ->
             let newFolder = (Path.Combine(outputFolder,"DataProvider"))
             createDir newFolder
 
-            let source = DataProviderGenerator.GenerateAdd groupName t 
+            let source = DataProviderGenerator.GenerateAdd dataNamespace t 
             printfn "%s" source
             let formattedSOurce =  Fantomas.CodeFormatter.formatSourceString false source FormatConfig.Default
             File.WriteAllText(newFolder + "\\" + t.name + "Data.fs",formattedSOurce)
@@ -40,7 +40,7 @@ let main argv =
             let newFolder = (Path.Combine(outputFolder,"Renditions"))
             createDir newFolder
 
-            let source = RenditionGenerator.Generate groupName t 
+            let source = RenditionGenerator.Generate coreNamespace t 
             printfn "%s" source
             let formattedSOurce =  Fantomas.CodeFormatter.formatSourceString false source FormatConfig.Default
             File.WriteAllText(newFolder + "\\" + t.name + "Rendition.fs",formattedSOurce)
@@ -70,7 +70,7 @@ let main argv =
             ()
 
     semanticTypes 
-        |> Seq.iter (writeSource groupName "Domain" DomainGenerator.Generate) 
+        |> Seq.iter (writeSource coreNamespace "Domain" DomainGenerator.Generate) 
 
     allPrimitives 
         |> Seq.iter (writePropSource "Primitive" PrimitiveGeneration.Generate) 

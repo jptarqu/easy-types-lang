@@ -15,12 +15,11 @@ module PrimitiveGeneration =
     let Apply f (" + primitiveName + " s) =
         f s
     let Create (s: " + baseType + ") =
-        let result = CommonValidations.isCorrectLenght " + req.MinSize.ToString() + " " + req.Size.ToString() + " s 
-        match result with
-        | Bad errs  -> fail errs 
-        | Ok (goodObj, _) -> pass (" + primitiveName + " goodObj)
+        s
+        |> CommonValidations.isCorrectLenght " + req.MinSize.ToString() + " " + req.Size.ToString() + "
+        >=> " + primitiveName + "
 
-    let FromString = create
+    let FromString = Create
         
     let ToString (" + primitiveName + " s) : string =
         s
@@ -127,6 +126,8 @@ module PrimitiveGeneration =
         let ForDateOptional (primitiveName: string) (req: CommonDataRequirementsDate) =
             let baseType = "System.DateTime option"
             "
+    open System
+
     type T = private " + primitiveName + " of " + baseType + " 
 
     let Apply f (" + primitiveName + " s) =
@@ -291,4 +292,11 @@ module " + primitiveName + " =
     open Chessie
 
     " + createLogic + "
+
+    
+    type T with
+        member x.ToRendition() =
+            ToRendition x
+        member x.ToText() =
+            ToString x
 "

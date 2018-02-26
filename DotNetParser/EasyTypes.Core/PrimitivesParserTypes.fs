@@ -54,8 +54,8 @@ module PrimitivesParserTypes =
             | CommonDataRequirementsStringPattern _ -> "string"
             | CommonDataRequirementsInt _ -> "int"
             | CommonDataRequirementsDecimal _ -> "decimal"
-            | CommonDataRequirementsDate _ -> "System.DateTime"
-            | CommonDataRequirementsDateTime _ -> "System.DateTime"
+            | CommonDataRequirementsDate dreq -> "System.DateTime " + if dreq.Optional then " option" else ""
+            | CommonDataRequirementsDateTime dreq -> "System.DateTime " + if dreq.Optional then " option" else ""
             | CommonDataRequirementsBinary _ -> "byte[]"
             | CommonDataRequirementsMoney _ -> "decimal"
 

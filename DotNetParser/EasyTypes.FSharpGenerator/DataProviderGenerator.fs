@@ -64,7 +64,7 @@ module DataProviderGenerator =
         "
 
     let GenerateAdd nameSpace (customType: CustomType ) : string =
-        let passedParams = customType.props |> Seq.filter (isAutoDateColumn >> not) |> Seq.map buildParamForInsert
+        let passedParams = customType.props |> Seq.filter (autoGenColumn >> not) |> Seq.map buildParamForInsert
         let moduleName =  customType.name + "Data" 
         let funcName = "Add" + customType.name
         "namespace " + nameSpace + "

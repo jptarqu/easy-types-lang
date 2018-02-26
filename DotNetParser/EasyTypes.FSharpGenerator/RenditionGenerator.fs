@@ -8,6 +8,7 @@ module RenditionGenerator =
         let firstLetter = p.name.[0].ToString().ToUpper()
         let rest = p.name.Substring(1)
         (firstLetter + rest) +  " : " + p.propType.baseType.GetRenditionTypeName()
+
     let Generate nameSpace (customType: CustomType ) : string =
         let renditionType = customType.name + "Rendition"
         let props = customType.props |> Seq.map buildRenditionProp
