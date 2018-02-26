@@ -11,10 +11,10 @@ module ChoicesPrimitiveGenerator =
         |> Array.map (fun (i, v) -> sprintf "(\"%s\", %s)" i i )
     let buildLabelPairs (choices: IdLabelPair<string> array) = 
         choices 
-        |> Array.map (fun (i, v) -> sprintf "(\"%s\", %s)" i v )
+        |> Array.map (fun (i, v) -> sprintf "(\"%s\", \"%s\")" i v )
     let buildLabelDomainPairs (choices: IdLabelPair<string> array) = 
         choices 
-        |> Array.map (fun (i, v) -> sprintf "(%s, %s)" i v )
+        |> Array.map (fun (i, v) -> sprintf "(%s, \"%s\")" i v )
 
     let Generate (primitiveName: string) (req: CommonDataRequirementsStringChoices) = 
         let choicesUnion = req.Choices |> buildChoicesUnion 
