@@ -40,9 +40,10 @@ module DataProviderGenerator =
         let paramsForReturnRecord = customType.props |> Seq.map buildParamForGetResult
         let funcName = "Get" + customType.name
         let renditionType = customType.name + "Rendition"
+        let paramsTxt = if idCols |> Seq.isEmpty then "()" else (String.concat " " idCols) 
         "
 
-    let " + funcName + " " + (String.concat " " idCols) + " =
+    let " + funcName + " " + paramsTxt + " =
        asyncTrial {
             use queryCmd = new DbSchema.dbo.sp" + funcName + "ById()
             try
@@ -58,7 +59,7 @@ module DataProviderGenerator =
 
             with
             | ex ->
-                let! u = failWithException<" + renditionType + " option> ex \"" + funcName + "\" 
+                let! u = failWithException<_> ex \"" + funcName + "\" 
                 return u
         }
         "
@@ -84,7 +85,7 @@ module " + moduleName  + " =
                 return 0
             with
             |  ex ->
-                let! u = failWithException<int> ex \"" + funcName + "\" 
+                let! u = failWithException<_> ex \"" + funcName + "\" 
                 return u
         }
     " + (GenerateGet customType) + "
