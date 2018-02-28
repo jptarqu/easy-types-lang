@@ -34,11 +34,11 @@ module PrimitiveGeneration =
 
     let Apply f (" + primitiveName + " s) =
         f s
-    let private regexPattern = new Regex(\"" + req.RegexPattern.ToString() + "\")
+    let private regexPattern = new System.Text.Regex(\"" + req.RegexPattern.ToString() + "\")
     let Create (s: " + baseType + ") =
         s
         |> CommonValidations.isCorrectLenght " + req.MinSize.ToString() + " " + req.Size.ToString() + "
-        |> CommonValidations.isCorrectPattern regexPattern
+        >>= CommonValidations.isCorrectPattern regexPattern
         >=> " + primitiveName + "
 
     let FromString = Create
