@@ -12,6 +12,11 @@ module SqlCommon =
         | CommonDataRequirementsString dreq -> 
             let size = if dreq.Size = System.Int32.MaxValue then "max" else dreq.Size.ToString()
             "varchar(" +  size + ") NOT NULL"
+        | CommonDataRequirementsStringPattern dreq -> 
+            let size = if dreq.Size = System.Int32.MaxValue then "max" else dreq.Size.ToString()
+            "varchar(" +  size + ") NOT NULL"
+        | CommonDataRequirementsStringChoices dreq -> 
+            "varchar(" +  dreq.Size.ToString() + ") NOT NULL"
         | CommonDataRequirementsInt _ -> "int NOT NULL"
         | CommonDataRequirementsDecimal dreq -> "numeric(" +  dreq.Size.ToString() + ", " + dreq.Precision.ToString() + ") NOT NULL"
         | CommonDataRequirementsDate dreq -> "Date" + if dreq.Optional then " NULL" else " NOT NULL"
@@ -24,6 +29,11 @@ module SqlCommon =
         | CommonDataRequirementsString dreq -> 
             let size = if dreq.Size = System.Int32.MaxValue then "max" else dreq.Size.ToString()
             "varchar(" +  size + ") "
+        | CommonDataRequirementsStringPattern dreq -> 
+            let size = if dreq.Size = System.Int32.MaxValue then "max" else dreq.Size.ToString()
+            "varchar(" +  size + ") "
+        | CommonDataRequirementsStringChoices dreq -> 
+            "varchar(" +  dreq.Size.ToString() + ") "
         | CommonDataRequirementsInt _ -> "int"
         | CommonDataRequirementsDecimal dreq -> "numeric(" +  dreq.Size.ToString() + ", " + dreq.Precision.ToString() + ")"
         | CommonDataRequirementsDate dreq -> "Date" + if dreq.Optional then " = NULL" else ""

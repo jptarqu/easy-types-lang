@@ -5,6 +5,7 @@ module PrimitivesParserTypes =
     
     type PrimitiveTypes =
         | String
+        | StringPattern
         | Integer
         | Decimal
         | Money
@@ -15,6 +16,7 @@ module PrimitivesParserTypes =
         
     let PrimitiveTypesNames = [|
        "String"
+       "StringPattern"
        "Integer"
        "Decimal"
        "Money"
@@ -29,10 +31,10 @@ module PrimitivesParserTypes =
     type IdLabelPair<'IdType> = 'IdType * string
 
     type CommonDataRequirementsStringChoices =
-        { Choices: IdLabelPair<string> array  }
+        { Choices: IdLabelPair<string> array ; Size: int }
 
     type CommonDataRequirementsStringPattern =
-        {Size: int;   MinSize: int; RegexPattern: System.Text.RegularExpressions.Regex; CharValidation: (char->bool)  }
+        {Size: int;   MinSize: int; RegexPattern: System.Text.RegularExpressions.Regex; } //CharValidation: (char->bool)  }
     type CommonDataRequirementsInt =
         { MinValue: int; MaxValue: int;  }
     type CommonDataRequirementsDecimal =

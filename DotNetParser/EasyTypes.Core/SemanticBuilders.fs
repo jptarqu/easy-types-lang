@@ -4,6 +4,7 @@ module SemanticBuilders =
     open PrimitivesParserTypes
     open CustomTypesParserTypes
     open SemanticTypes
+    open System.Text.RegularExpressions
 
     let parseNumParam (str:string) =
         match str.Trim().ToLower() with 
@@ -59,10 +60,14 @@ module SemanticBuilders =
         match info.baseType with 
         | "String"      -> 
             { name = info.name; baseType = CommonDataRequirementsString {MinSize  = parseNumParam info.baseArgs.[0];   Size = parseNumParam info.baseArgs.[1];  } }
+        | "StringPattern"      -> 
+            { name = info.name; baseType = CommonDataRequirementsStringPattern {MinSize  = parseNumParam info.baseArgs.[0];   Size = parseNumParam info.baseArgs.[1]; RegexPattern =new Regex(info.baseArgs.[2])   } }
         | "StringChoices"      -> 
             //let choices = info.baseArgs |> Array.chunkBySize 2 |> Array.map (fun a -> if a.Length =2 then a.[0], a.[1] else a.[0], "")
             let lookup = allLookups |> Array.tryFind (fun e -> e.name =  info.baseArgs.[0])  |> Option.defaultValue SemanticTypes.LookupNotFound
-            { name = info.name; baseType = CommonDataRequirementsStringChoices { Choices = lookup.pairs } }
+            
+            let size = lookup.pairs |> Array.map (fun (i,v) -> i.Length) |> Array.max
+            { name = info.name; baseType = CommonDataRequirementsStringChoices { Choices = lookup.pairs ; Size = size};  }
         | "Integer"     ->
             { name = info.name; baseType = CommonDataRequirementsInt { MinValue = parseNumParam info.baseArgs.[0]; MaxValue = parseNumParam info.baseArgs.[1];  } }
         | "Decimal"     ->
