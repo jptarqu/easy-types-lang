@@ -69,7 +69,11 @@ module SemanticBuilders =
             let size = lookup.pairs |> Array.map (fun (i,v) -> i.Length) |> Array.max
             { name = info.name; baseType = CommonDataRequirementsStringChoices { Choices = lookup.pairs ; Size = size};  }
         | "Integer"     ->
-            { name = info.name; baseType = CommonDataRequirementsInt { MinValue = parseNumParam info.baseArgs.[0]; MaxValue = parseNumParam info.baseArgs.[1];  } }
+            let isOpt = 
+                match info.baseArgs with
+                | [| _; _; "optional" |] -> true
+                | _ -> false
+            { name = info.name; baseType = CommonDataRequirementsInt { MinValue = parseNumParam info.baseArgs.[0]; MaxValue = parseNumParam info.baseArgs.[1]; Optional = isOpt  } }
         | "Decimal"     ->
             let maxVal = parseDecParam info.baseArgs.[1]
             let maxValStr = maxVal.ToString()

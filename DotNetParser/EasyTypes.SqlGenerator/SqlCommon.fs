@@ -17,7 +17,7 @@ module SqlCommon =
             "varchar(" +  size + ") NOT NULL"
         | CommonDataRequirementsStringChoices dreq -> 
             "varchar(" +  dreq.Size.ToString() + ") NOT NULL"
-        | CommonDataRequirementsInt _ -> "int NOT NULL"
+        | CommonDataRequirementsInt dreq -> "int" + if dreq.Optional then " NULL" else " NOT NULL"
         | CommonDataRequirementsDecimal dreq -> "numeric(" +  dreq.Size.ToString() + ", " + dreq.Precision.ToString() + ") NOT NULL"
         | CommonDataRequirementsDate dreq -> "Date" + if dreq.Optional then " NULL" else " NOT NULL"
         | CommonDataRequirementsDateTime dreq -> "DateTime" + if dreq.Optional then " NULL" else " NOT NULL"
@@ -34,7 +34,7 @@ module SqlCommon =
             "varchar(" +  size + ") "
         | CommonDataRequirementsStringChoices dreq -> 
             "varchar(" +  dreq.Size.ToString() + ") "
-        | CommonDataRequirementsInt _ -> "int"
+        | CommonDataRequirementsInt dreq -> "int" + if dreq.Optional then " = NULL" else ""
         | CommonDataRequirementsDecimal dreq -> "numeric(" +  dreq.Size.ToString() + ", " + dreq.Precision.ToString() + ")"
         | CommonDataRequirementsDate dreq -> "Date" + if dreq.Optional then " = NULL" else ""
         | CommonDataRequirementsDateTime dreq -> "DateTime" + if dreq.Optional then " = NULL" else ""

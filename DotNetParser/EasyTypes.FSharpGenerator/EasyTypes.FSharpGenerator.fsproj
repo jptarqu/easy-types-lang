@@ -57,6 +57,7 @@
   <ItemGroup>
     <Compile Include="AssemblyInfo.fs" />
     <Compile Include="ChoicesPrimitiveGenerator.fs" />
+    <Compile Include="OptionalIntPrimitiveGenerator.fs" />
     <Compile Include="PrimitiveGeneration.fs" />
     <Compile Include="DataProviderGenerator.fs" />
     <Compile Include="RenditionGenerator.fs" />

@@ -1,6 +1,7 @@
 ﻿primitives
 IntId Integer 1 max
 ForeignKey Integer 1 max
+OptionalForeignKey Integer 1 max optional
 ShortString String 1 50
 LongString String 1 255
 Date Date min max
@@ -16,3 +17,6 @@ OptionalDate Date min max optional
 OptionalDateTime DateTime min max optional
 EmailAddress StringPattern 1 50 ^\S+@\S+\.\S+$
 ServerName String 1 60
+YesNo StringChoices YesNoLookup
+FileContents Binary 1 max
+FileExtension String 1 4

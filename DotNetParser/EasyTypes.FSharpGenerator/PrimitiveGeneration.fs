@@ -51,8 +51,11 @@ module PrimitiveGeneration =
         s
         "
         let ForInt (primitiveName: string) (req: CommonDataRequirementsInt) =
-            let baseType = "int"
-            "
+            if req.Optional then
+                OptionalIntPrimitiveGenerator.Generate primitiveName req
+            else 
+                let baseType = "int"
+                "
     type T = private " + primitiveName + " of " + baseType + "
 
     let Apply f (" + primitiveName + " s) =

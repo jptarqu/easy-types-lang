@@ -3,3 +3,7 @@
 lookup Status
     ACTV Active Student
     CLSD Delete Student
+    
+lookup YesNoLookup
+    Y Yes
+    N No

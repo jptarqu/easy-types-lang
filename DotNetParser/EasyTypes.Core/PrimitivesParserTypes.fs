@@ -36,7 +36,7 @@ module PrimitivesParserTypes =
     type CommonDataRequirementsStringPattern =
         {Size: int;   MinSize: int; RegexPattern: System.Text.RegularExpressions.Regex; } //CharValidation: (char->bool)  }
     type CommonDataRequirementsInt =
-        { MinValue: int; MaxValue: int;  }
+        { MinValue: int; MaxValue: int;  Optional: bool }
     type CommonDataRequirementsDecimal =
         {Size: int; Precision: int;  MinValue: decimal; MaxValue: decimal;  }
     type CommonDataRequirementsMoney =
