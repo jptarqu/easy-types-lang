@@ -68,10 +68,22 @@ let main argv =
             let formattedSOurce =  Fantomas.CodeFormatter.formatSourceString false source FormatConfig.Default
             File.WriteAllText(newFolder + "\\" + t.name + suffix + ".fs",formattedSOurce)
             ()
+    let writePropsSource suffix generator (t: CustomPrimitive seq)  = 
+    
+            let newFolder = (Path.Combine(outputFolder, suffix))
+            createDir newFolder
 
+            let source = generator t 
+            printfn "%s" source
+            let formattedSOurce =  Fantomas.CodeFormatter.formatSourceString false source FormatConfig.Default
+            File.WriteAllText(newFolder + "\\" +  suffix + ".fs",formattedSOurce)
+            ()
     semanticTypes 
         |> Seq.iter (writeSource coreNamespace "Domain" DomainGenerator.Generate) 
 
     allPrimitives 
         |> Seq.iter (writePropSource "Primitive" PrimitiveGeneration.Generate) 
+    
+    allPrimitives 
+        |> (writePropsSource "PropertyValidatorController" PrimitivesValidationControllerGenerator.Generate)
     0 // return an integer exit code
