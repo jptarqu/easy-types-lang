@@ -34,7 +34,7 @@ module PrimitiveGeneration =
 
     let Apply f (" + primitiveName + " s) =
         f s
-    let private regexPattern = new System.Text.Regex(\"" + req.RegexPattern.ToString() + "\")
+    let private regexPattern = new System.Text.RegularExpressions.Regex(\"" + req.RegexPattern.ToString() + "\")
     let Create (s: " + baseType + ") =
         s
         |> CommonValidations.isCorrectLenght " + req.MinSize.ToString() + " " + req.Size.ToString() + "
@@ -264,10 +264,8 @@ module PrimitiveGeneration =
         s
         |> CommonValidations.isCorrectByteLenght " + req.MinSize.ToString() + " " + req.Size.ToString() + "
         >=> " + primitiveName + "
-
-    let FromString (str:string) =
-        str.ToCharArray()
-        >>= Create
+        
+    let FromString(str : string) = str |> System.Text.Encoding.Default.GetBytes |> Create
         
             
     let ToString (" + primitiveName + " s) : string =

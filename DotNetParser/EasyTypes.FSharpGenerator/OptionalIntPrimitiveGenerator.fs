@@ -5,7 +5,7 @@ module OptionalIntPrimitiveGenerator =
     
 
     let Generate (primitiveName: string) (req: CommonDataRequirementsInt) =
-            let baseType = "int"
+            let baseType = "int option"
             "
     type T = private " + primitiveName + " of " + baseType + "
 
@@ -22,7 +22,7 @@ module OptionalIntPrimitiveGenerator =
 
             
     let FromString (str:string) =
-        if String.IsNullOrEmpty(str) then pass None else (str
+        if System.String.IsNullOrEmpty(str) then pass None else (str
             |> CommonValidations.ToInt >=> Some)
         >>= Create
         

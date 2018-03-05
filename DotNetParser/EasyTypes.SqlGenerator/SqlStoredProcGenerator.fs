@@ -52,7 +52,8 @@ module SqlStoredProcGenerator =
             |> Seq.map (fun p ->  p.name
                 )
         let header = "CREATE PROCEDURE  [" + nameForSpGet(customType) + "]"
+        let whereClause = if conds |> Seq.isEmpty then "" else  "where " + (String.concat "\nAND " conds) 
         "\n" + header + "\n" + (String.concat ",\n" parameters) + "\nAS\n" +
         "	
-	    select TOP 1 " + (String.concat ",\n" selectedCols) + " from [" + customType.name + "] where " + (String.concat "\nAND " conds) + "
-        "
+	    select TOP 1 " + (String.concat ",\n" selectedCols) + " from [" + customType.name + "] " + whereClause
+        
