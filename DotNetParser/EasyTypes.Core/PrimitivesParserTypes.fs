@@ -62,7 +62,7 @@ module PrimitivesParserTypes =
             match x with
             | CommonDataRequirementsString _ -> "string"
             | CommonDataRequirementsStringPattern _ -> "string"
-            | CommonDataRequirementsInt _ -> "int"
+            | CommonDataRequirementsInt dreq -> "int" + if dreq.Optional then " option" else ""
             | CommonDataRequirementsDecimal _ -> "decimal"
             | CommonDataRequirementsDate dreq -> "System.DateTime " + if dreq.Optional then " option" else ""
             | CommonDataRequirementsDateTime dreq -> "System.DateTime " + if dreq.Optional then " option" else ""
