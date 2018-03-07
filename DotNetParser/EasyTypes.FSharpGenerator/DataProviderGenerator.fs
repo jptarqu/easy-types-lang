@@ -4,6 +4,7 @@ module DataProviderGenerator =
     open DotNetParser.SemanticTypes
     open System
     open System
+    open System
 
     
     let isPrimaryKey  (p:TypeProperty) = 
@@ -63,11 +64,35 @@ module DataProviderGenerator =
                 return u
         }
         "
+    
+    let private buildIdAssignment (p:TypeProperty): string =
+        let firstLetter = p.name.[0].ToString().ToUpper()
+        let rest = p.name.Substring(1)
+        (firstLetter + rest) +  " = idOrDefault idGenerated"
+        
+    let GenerateUpdate (customType: CustomType ) : string =
+        let passedParams = customType.props |> Seq.filter (isAutoDateColumn >> not) |> Seq.map buildParamForInsert
+        let funcName = "Update" + customType.name
+        "
 
+    let " + funcName + " (rendition: " + customType.name + "Rendition ) =
+        asyncTrial {
+            use cmd = new DbSchema.dbo.spUpdate" + (customType.name) + "()
+            try
+                let! _ = cmd.AsyncExecuteSingle(" + (String.concat ", " passedParams) + ")
+                return rendition
+            with
+            |  ex ->
+                let! u = failWithException<_> ex \"" + funcName + "\" 
+                return u
+        }
+        "
     let GenerateAdd nameSpace (customType: CustomType ) : string =
+        let idAssignments = customType.props |> Seq.filter isPrimaryKey  |> Seq.map buildIdAssignment
         let passedParams = customType.props |> Seq.filter (autoGenColumn >> not) |> Seq.map buildParamForInsert
         let moduleName =  customType.name + "Data" 
         let funcName = "Add" + customType.name
+        let withCode = if idAssignments |> Seq.isEmpty then "rendition" else "{ rendition with " + (String.concat "; " idAssignments) + " }"
         "namespace " + nameSpace + "
 
 module " + moduleName  + " = 
@@ -81,12 +106,13 @@ module " + moduleName  + " =
         asyncTrial {
             use cmd = new DbSchema.dbo.spInsert" + (customType.name) + "()
             try
-                let! results = cmd.AsyncExecute(" + (String.concat ", " passedParams) + ")
-                return 0
+                let! idGenerated = cmd.AsyncExecuteSingle(" + (String.concat ", " passedParams) + ")
+                return " + withCode + "
             with
             |  ex ->
                 let! u = failWithException<_> ex \"" + funcName + "\" 
                 return u
         }
     " + (GenerateGet customType) + "
+    " + (GenerateUpdate customType) + "
         "

@@ -38,6 +38,16 @@ module ChoicesPrimitiveGenerator =
         [
             " +  (String.concat "\n            " labelDomainPairs) + "
         ]
+        
+    let ToString2(s: D) : string = 
+        let itemFound = 
+            IdDomainPairs |> Seq.tryFind (fun (id, value) -> value = s)
+        match itemFound with
+        | None -> \"UNKOWN\"
+        | Some(id, value) -> id
+
+    type D with
+        member x.ToText() = ToString2 x 
 
     type T = 
         private
