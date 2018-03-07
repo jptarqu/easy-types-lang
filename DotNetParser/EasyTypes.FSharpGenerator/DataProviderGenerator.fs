@@ -79,7 +79,7 @@ module DataProviderGenerator =
         asyncTrial {
             use cmd = new DbSchema.dbo.spUpdate" + (customType.name) + "()
             try
-                let! _ = cmd.AsyncExecuteSingle(" + (String.concat ", " passedParams) + ")
+                let! _ = cmd.AsyncExecute(" + (String.concat ", " passedParams) + ")
                 return rendition
             with
             |  ex ->
