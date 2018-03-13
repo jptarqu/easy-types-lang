@@ -27,7 +27,7 @@ let main argv =
             let newFolder = (Path.Combine(outputFolder,"DataProvider"))
             createDir newFolder
 
-            let source = DataProviderGenerator.GenerateAdd dataNamespace t 
+            let source = DataProviderGenerator.GenerateAdd coreNamespace dataNamespace t 
             printfn "%s" source
             let formattedSOurce =  Fantomas.CodeFormatter.formatSourceString false source FormatConfig.Default
             File.WriteAllText(newFolder + "\\" + t.name + "Data.fs",formattedSOurce)

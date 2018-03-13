@@ -87,7 +87,7 @@ module DataProviderGenerator =
                 return u
         }
         "
-    let GenerateAdd nameSpace (customType: CustomType ) : string =
+    let GenerateAdd coreNamespace nameSpace (customType: CustomType ) : string =
         let idAssignments = customType.props |> Seq.filter isPrimaryKey  |> Seq.map buildIdAssignment
         let passedParams = customType.props |> Seq.filter (autoGenColumn >> not) |> Seq.map buildParamForInsert
         let moduleName =  customType.name + "Data" 
@@ -101,6 +101,7 @@ module " + moduleName  + " =
     open Chessie.ErrorHandling
     open FsCommons.Core
     open System
+    open " + coreNamespace + "
 
     let " + funcName + " (rendition: " + customType.name + "Rendition ) =
         asyncTrial {
