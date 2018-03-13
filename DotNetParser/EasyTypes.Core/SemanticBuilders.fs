@@ -97,7 +97,7 @@ module SemanticBuilders =
                 | _ -> false
             { name = info.name; baseType = CommonDataRequirementsDateTime {MinValue = parseDateTimeParam info.baseArgs.[0]; MaxValue = parseDateTimeParam info.baseArgs.[1] ; Optional = isOpt } }
         | "Binary"     ->      
-            { name = info.name; baseType = CommonDataRequirementsBinary {Size = parseNumParam info.baseArgs.[0];   MinSize = parseNumParam info.baseArgs.[1];  } }
+            { name = info.name; baseType = CommonDataRequirementsBinary {MinSize = parseNumParam info.baseArgs.[0]; Size = parseNumParam info.baseArgs.[1];  } }
         | _ ->
             failwithf "Invalid Type %s" info.baseType
     
