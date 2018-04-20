@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <Compile Include="Common.fs" />
+    <Compile Include="CustomRelationParserTypes.fs" />
     <Compile Include="CustomLookupsParserTypes.fs" />
     <Compile Include="CustomLookupsParser.fs" />
     <Compile Include="PrimitivesParserTypes.fs" />
