@@ -19,9 +19,11 @@ module OptionalStringPrimitiveGenerator =
             |> CommonValidations.isCorrectLenght " + req.MinSize.ToString() + " " + req.Size.ToString() + "
             >=> Some
             >=> " + primitiveName + "
-
             
-    let FromString = Create
+    let FromString (txt:string) =
+        match txt with
+        | null -> Create None
+        | _ -> Create (Some txt)
             
     let ToString (" + primitiveName + " s) : string =
         match s with
