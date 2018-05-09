@@ -6,7 +6,7 @@ module BuiltinPrimitives =
     open SemanticTypes
     open System
 
-    let UnkownPrimitive: CustomPrimitive = { name = "Unkown"; baseType =  CommonDataRequirementsString {Size = 0;   MinSize = 0;  } } 
+    let UnkownPrimitive: CustomPrimitive = { name = "Unkown"; baseType =  CommonDataRequirementsString {Size = 0;   MinSize = 0; Optional = false  } } 
     //let ShortString: CustomPrimitive = { name = "ShortString"; baseType =  CommonDataRequirementsString {Size = 20;   MinSize = 1;  } } 
     //let LongString: CustomPrimitive = { name = "LongString"; baseType =  CommonDataRequirementsString {Size = 20;   MinSize = 1;  } } 
     //let DatePrimitive: CustomPrimitive = { name = "Date"; baseType = 

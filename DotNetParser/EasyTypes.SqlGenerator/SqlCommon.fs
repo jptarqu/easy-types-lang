@@ -11,7 +11,7 @@ module SqlCommon =
         match dataReqs with
         | CommonDataRequirementsString dreq -> 
             let size = if dreq.Size = System.Int32.MaxValue then "max" else dreq.Size.ToString()
-            "varchar(" +  size + ") NOT NULL"
+            "varchar(" +  size + ")" + if dreq.Optional then " NULL" else " NOT NULL"
         | CommonDataRequirementsStringPattern dreq -> 
             let size = if dreq.Size = System.Int32.MaxValue then "max" else dreq.Size.ToString()
             "varchar(" +  size + ") NOT NULL"
@@ -28,7 +28,7 @@ module SqlCommon =
         match dataReqs with
         | CommonDataRequirementsString dreq -> 
             let size = if dreq.Size = System.Int32.MaxValue then "max" else dreq.Size.ToString()
-            "varchar(" +  size + ") "
+            "varchar(" +  size + ")" + if dreq.Optional then " = NULL" else ""
         | CommonDataRequirementsStringPattern dreq -> 
             let size = if dreq.Size = System.Int32.MaxValue then "max" else dreq.Size.ToString()
             "varchar(" +  size + ") "

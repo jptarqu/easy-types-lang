@@ -6,6 +6,7 @@
     <OutputType>Exe</OutputType>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="OptionalStringPrimitiveGenerator.fs" />
     <Compile Include="AssemblyInfo.fs" />
     <Compile Include="ChoicesPrimitiveGenerator.fs" />
     <Compile Include="OptionalIntPrimitiveGenerator.fs" />

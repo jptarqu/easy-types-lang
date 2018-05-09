@@ -8,8 +8,11 @@ module PrimitiveGeneration =
         open DotNetParser.PrimitivesParserTypes
 
         let ForStr (primitiveName: string) (req: CommonDataRequirementsString) =
-            let baseType = "string"
-            "
+            if req.Optional then 
+                OptionalStringPrimitiveGenerator.Generate primitiveName req
+            else 
+                let baseType = "string"
+                "
     type T = private " + primitiveName + " of " + baseType + "
 
     let Apply f (" + primitiveName + " s) =

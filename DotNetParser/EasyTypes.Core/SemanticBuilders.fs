@@ -59,7 +59,11 @@ module SemanticBuilders =
     let mapPrimitiveToSemantic (allLookups: CustomTextLookup array) (info: CustomPrimitiveInfo) : CustomPrimitive =
         match info.baseType with 
         | "String"      -> 
-            { name = info.name; baseType = CommonDataRequirementsString {MinSize  = parseNumParam info.baseArgs.[0];   Size = parseNumParam info.baseArgs.[1];  } }
+            let isOpt = 
+                match info.baseArgs with
+                | [| _; _; "optional" |] -> true
+                | _ -> false
+            { name = info.name; baseType = CommonDataRequirementsString {MinSize  = parseNumParam info.baseArgs.[0];   Size = parseNumParam info.baseArgs.[1]; Optional = isOpt  } }
         | "StringPattern"      -> 
             { name = info.name; baseType = CommonDataRequirementsStringPattern {MinSize  = parseNumParam info.baseArgs.[0];   Size = parseNumParam info.baseArgs.[1]; RegexPattern =new Regex(info.baseArgs.[2])   } }
         | "StringChoices"      -> 

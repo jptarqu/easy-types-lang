@@ -26,7 +26,7 @@ module PrimitivesParserTypes =
        "StringChoices"
        |]
     type CommonDataRequirementsString =
-        {Size: int;   MinSize: int;  }
+        {Size: int;   MinSize: int; Optional: bool }
 
     type IdLabelPair<'IdType> = 'IdType * string
 
@@ -60,8 +60,8 @@ module PrimitivesParserTypes =
         | CommonDataRequirementsStringChoices of CommonDataRequirementsStringChoices
         member x.GetRenditionTypeName() =
             match x with
-            | CommonDataRequirementsString _ -> "string"
-            | CommonDataRequirementsStringPattern _ -> "string"
+            | CommonDataRequirementsString dreq -> "string" + if dreq.Optional then " option" else ""
+            | CommonDataRequirementsStringPattern dreq -> "string" 
             | CommonDataRequirementsInt dreq -> "int" + if dreq.Optional then " option" else ""
             | CommonDataRequirementsDecimal _ -> "decimal"
             | CommonDataRequirementsDate dreq -> "System.DateTime " + if dreq.Optional then " option" else ""
